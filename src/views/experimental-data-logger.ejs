@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<header>
+    <title>SVG-2M</title>
+    <link rel="stylesheet" href="\css\view.css" />
+    <div class="logo">
+        <img src="\images\logo.png" alt="SVG-2M" />
+    </div>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/">Register</a></li>
+            <li><a href="/">Login</a></li>
+        </ul>
+    </nav>
+    <script>
+        const s = "<%=data[0].seri%>";
+        console.log(s);
+    </script>
+</header>
+
+<body>
+    <!-- Page content http://erms.nuclearelectronics-inst.com/home/dataapi2 -->
+    <div class="w3-content" style="max-width: 100%">
+        <!-- About Section -->
+        <div class="w3-row w3-padding-137" id="about">
+            <div class="w3-center w3-hide-small">
+                <h2>SVG-2M</h2>
+                <h2>Experimental Data Logger</h2>
+                <a class="w3-bar-item w3-button" style="margin: 3px auto" ,><b><u>SVG-2M</u></b></a>
+                <a class="w3-bar-item w3-button"><b><u>Delete data</u></b></a>
+                <br />
+            </div>
+
+            <div class="w3-center w3-hide-small tableFixHead">
+                <table id="customers">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Seri</th>
+                            <th>Ngày</th>
+                            <th>Thời gian</th>
+                            <th>Kinh độ</th>
+                            <th>Vĩ độ</th>
+                            <th>Mode</th>
+                            <th>DRA DoseRate<br />(µSv/h)</th>
+                            <th>DRA Dose<br />(µSv)</th>
+                            <th>Neutron</th>
+                            <th>ACT - Alpha<br />(CPS)</th>
+                            <th>ACT - Beta<br />(CPS)</th>
+                            <th>ACT - Gamma<br />(µSv/h)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbl_data">
+                        <% data.forEach((row, index)=> {%>
+                            <tr id="<%=row._id%>">
+                                <td class="first-col">
+                                    <%=index+1%>
+                                </td>
+                                <td>
+                                    <%=row.seri%>
+                                </td>
+                                <td>
+                                    <%=row.date%>
+                                </td>
+                                <td>
+                                    <%=row.time%>
+                                </td>
+                                <td>
+                                    <%=row.longitude%>
+                                </td>
+                                <td>
+                                    <%=row.latitude%>
+                                </td>
+                                <td>
+                                    <%=row.mode%>
+                                </td>
+                                <td>
+                                    <%=row.draDoseRate%>
+                                </td>
+                                <td>
+                                    <%=row.draDose%>
+                                </td>
+                                <td>
+                                    <%=row.neutron%>
+                                </td>
+                                <td>
+                                    <%=row.actAlpha%>
+                                </td>
+                                <td>
+                                    <%=row.actBeta%>
+                                </td>
+                                <td>
+                                    <%=row.actGamma%>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- End page content -->
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/socket-io.js"></script>
+</body>
