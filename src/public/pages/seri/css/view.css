@@ -164,3 +164,44 @@ thead th {
   color: #ccc;
   cursor: default;
 }
+
+#svg2m-table>thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+#svg2m-table>tbody>tr {
+  cursor: pointer;
+}
+
+#svg2m-table>tbody>tr:hover {
+  background-color: #DDDDDD;
+}
+
+#graph-container {
+  width: 85%;
+}
+
+#download-container {
+  width: 15%;
+}
+
+#download-container button {
+  cursor: pointer;
+  margin-top: 15px;
+  border: 0;
+  background-color: transparent;
+  padding: 0;
+}
+
+#download-container img {
+  width: 100%;
+  height: auto;
+  margin-top: 15px;
+}
+
+#download-container h5 {
+  margin: 20px 0px 10px 0;
+  padding: 0;
+}

@@ -2,6 +2,9 @@
 
 <header>
     <title>SVG-2M</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="\css\view.css" />
     <div class="logo">
         <img src="\images\logo.png" alt="SVG-2M" />
@@ -14,8 +17,64 @@
         </ul>
     </nav>
     <script>
-        const s = "<%=data[0].seri%>";
-        console.log(s);
+        let currentPage = 1;
+        let currentLimit = 10;
+        const onChangeInputPageNumber = (event) => {
+            const value = parseInt(event.target.value);
+            if (!value || value < 1) {
+                event.target.value = `${currentPage}`;
+                return;
+            }
+            window.postMessage({
+                type: "CHANGE_PAGE",
+                lastPage: currentPage,
+                newPage: value,
+                currentLimit: currentLimit
+            }, window.location.origin)
+
+            // update page
+            currentPage = value
+        }
+
+        const onChangeLimitPageNumber = (event) => {
+            const value = parseInt(event.target.value);
+            if (value === currentLimit) {
+                return;
+            }
+            window.postMessage({
+                type: "CHANGE_LIMIT",
+                lastLimit: currentLimit,
+                newLimit: value,
+                currentPage: currentPage
+            }, window.location.origin)
+            currentLimit = value;
+
+        }
+
+        const onClickPreviousPage = () => {
+            const pageInput = document.getElementById("pagination-page-input");
+            pageInput.value = `${parseInt(pageInput.value) - 1}`;
+            pageInput.dispatchEvent(new Event("change"))
+        }
+
+        const onClickFirstPage = () => {
+            const pageInput = document.getElementById("pagination-page-input");
+            pageInput.value = pageInput.getAttribute("min");
+            pageInput.dispatchEvent(new Event("change"))
+        }
+
+        const onClickNextPage = () => {
+            const pageInput = document.getElementById("pagination-page-input");
+            pageInput.value = `${parseInt(pageInput.value) + 1}`;
+            pageInput.dispatchEvent(new Event("change"))
+        }
+
+        const onClickLastPage = () => {
+            const pageInput = document.getElementById("pagination-page-input");
+            pageInput.value = pageInput.getAttribute("max");
+            pageInput.dispatchEvent(new Event("change"))
+        }
+
     </script>
 </header>
 
@@ -27,11 +86,47 @@
             <div class="w3-center w3-hide-small">
                 <h2>SVG-2M</h2>
                 <h2>Experimental Data Logger</h2>
-                <a class="w3-bar-item w3-button" style="margin: 3px auto" ,><b><u>SVG-2M</u></b></a>
-                <a class="w3-bar-item w3-button"><b><u>Delete data</u></b></a>
                 <br />
             </div>
+            <div class="pagination-container">
+                <div class="pagination-information">
+                    <span class="pagination-label">Trang:</span>
+                    <!-- <select class="pagination-select" aria-label="Page">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+            </select> -->
+                    <input type="number" class="pagination-input" value="1" min="1" id="pagination-page-input"
+                        onchange="onChangeInputPageNumber(event)">
 
+                    <span class="pagination-label">Dòng trên trang:</span>
+                    <select class="pagination-select" id="pagination-page-limit" aria-label="Rows per page"
+                        onchange="onChangeLimitPageNumber(event)">
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
+
+                    <span class="pagination-label" id="pagination-page-statistic">Hiển thị 1 - 5 trên 9</span>
+                </div>
+
+                <div class="pagination-buttons">
+                    <button class="pagination-button" id="pagination-first" onclick="onClickFirstPage()">
+                        <i class="fa-solid fa-angles-left fa-beat"></i>
+                    </button>
+
+                    <button class="pagination-button" id="pagination-previous" onclick="onClickPreviousPage()">
+                        <i class="fa-solid fa-angle-left fa-beat"></i>
+                    </button>
+
+                    <button class="pagination-button" id="pagination-next" onclick="onClickNextPage()">
+                        <i class="fa-solid fa-angle-right fa-beat"></i>
+                    </button>
+
+                    <button class="pagination-button" id="pagination-last" onclick="onClickLastPage()">
+                        <i class="fa-solid fa-angles-right fa-beat"></i>
+                    </button>
+                </div>
+            </div>
             <div class="w3-center w3-hide-small tableFixHead">
                 <table id="customers">
                     <thead>
@@ -52,49 +147,6 @@
                         </tr>
                     </thead>
                     <tbody id="tbl_data">
-                        <% data.forEach((row, index)=> {%>
-                            <tr id="<%=row._id%>">
-                                <td class="first-col">
-                                    <%=index+1%>
-                                </td>
-                                <td>
-                                    <%=row.seri%>
-                                </td>
-                                <td>
-                                    <%=row.date%>
-                                </td>
-                                <td>
-                                    <%=row.time%>
-                                </td>
-                                <td>
-                                    <%=row.longitude%>
-                                </td>
-                                <td>
-                                    <%=row.latitude%>
-                                </td>
-                                <td>
-                                    <%=row.mode%>
-                                </td>
-                                <td>
-                                    <%=row.draDoseRate%>
-                                </td>
-                                <td>
-                                    <%=row.draDose%>
-                                </td>
-                                <td>
-                                    <%=row.neutron%>
-                                </td>
-                                <td>
-                                    <%=row.actAlpha%>
-                                </td>
-                                <td>
-                                    <%=row.actBeta%>
-                                </td>
-                                <td>
-                                    <%=row.actGamma%>
-                                </td>
-                            </tr>
-                            <% }) %>
                     </tbody>
                 </table>
             </div>
@@ -104,6 +156,63 @@
 
         <!-- End page content -->
     </div>
+
+
+    <script src="/js/data-loader.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/socket-io.js"></script>
 </body>
+
+<style>
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+    }
+
+    .pagination-select {
+        margin-left: 8px;
+        margin-right: 16px;
+        border: none;
+        background-color: transparent;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .pagination-information {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-grow: 1;
+    }
+
+    .pagination-label {
+        margin-right: 8px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .pagination-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .pagination-button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        margin-left: 8px;
+        margin-right: 8px;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .pagination-button:disabled {
+        color: #ccc;
+        cursor: default;
+    }
+</style>

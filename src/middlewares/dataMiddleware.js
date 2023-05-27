@@ -1,4 +1,4 @@
-const { query } = require("express");
+import { dataService } from "../services";
 
 const stringToDate = (str) => {
   const dateTimeParts = str.split(" ");
@@ -54,15 +54,15 @@ const isValidTime = (timeString) => {
   return true;
 };
 
-const dataValidCheck = (req, res, next) => {
+const dataValidCheck = async (req, res, next) => {
   const params = req.query;
 
   const requireField = [
     "seri",
     "date",
     "time",
-    "longitude",
-    "latitude",
+    // "longitude",
+    // "latitude",
     "mode",
     "draDoseRate",
     "draDose",
@@ -93,22 +93,29 @@ const dataValidCheck = (req, res, next) => {
     "actBeta",
     "actGamma",
   ].forEach((field) => {
-    svg2mData[field] = parseFloat(params[field]);
+    const val = params[field];
+    if (val && !isNaN(val)) {
+      svg2mData[field] = parseFloat(val);
+    }
     // console.log(svg2mData[field]);
   });
 
   // Check valid
   const valid = {
     seri: svg2mData.seri > 3300000,
-    longitude: svg2mData.longitude >= -90 && svg2mData.longitude <= 90,
-    latitude: svg2mData.latitude >= -180 && svg2mData.latitude <= 180,
+    longitude:
+      !svg2mData.longitude ||
+      (svg2mData.longitude >= -180 && svg2mData.longitude <= 180),
+    latitude:
+      !svg2mData.latitude ||
+      (svg2mData.latitude >= -180 && svg2mData.latitude <= 180),
     mode: svg2mData.mode === 0 || svg2mData.mode === 1,
     draDoseRate: svg2mData.mode >= 0,
-    draDose: svg2mData.mode >= 0,
-    neutron: svg2mData.mode >= 0,
-    actAlpha: svg2mData.mode >= 0,
-    actBeta: svg2mData.mode >= 0,
-    actGamma: svg2mData.mode >= 0,
+    draDose: svg2mData.draDose >= 0,
+    neutron: svg2mData.neutron >= 0,
+    actAlpha: svg2mData.actAlpha >= 0,
+    actBeta: svg2mData.actBeta >= 0,
+    actGamma: svg2mData.actGamma >= 0,
     date: isValidDate(params.date),
     time: isValidTime(params.time),
   };
@@ -123,10 +130,41 @@ const dataValidCheck = (req, res, next) => {
   const timeStamp = params.date + " " + params.time;
   svg2mData.time = stringToDate(timeStamp);
 
+  // Check duplicate seri and time
+  const svg2mExisted = await dataService.isExisted(
+    svg2mData.seri,
+    svg2mData.time
+  );
+  if (svg2mExisted || svg2mExisted === -1) {
+    return res.status(400).send("0");
+  }
+
   req.svg2mData = svg2mData;
+  next();
+};
+
+const parseQuery = (req, res, next) => {
+  const query = req.query || {};
+
+  try {
+    const arr = query.series && query.series.split(",").map(Number);
+    query.series =
+      arr && arr.length !== 0 && arr.every((seri) => !isNaN(seri)) ? arr : null;
+
+    ["beginTime", "endTime", "page", "limit"].forEach((key) => {
+      const value = query[key];
+      query[key] = value && !isNaN(value) ? Number(value) : null;
+    });
+  } catch (error) {
+    return res.status(400).json({
+      err: "Invalid request! The request must like: /?[series=a,b,c,...]&[beginTime=<Number>]&[endTime=<Number>]&[page=<Number>]&[limit=<Number>]",
+    });
+  }
+  req.query = query;
   next();
 };
 
 module.exports = {
   dataValidCheck,
+  parseQuery,
 };

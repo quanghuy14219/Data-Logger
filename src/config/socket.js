@@ -1,12 +1,9 @@
-const socketIO = require("socket.io");
-
 const socketIORef = {
   current: null,
   clients: {},
 };
 
-export const openSocket = (server, options = {}) => {
-  const io = socketIO(server, options);
+export const configSocket = (io) => {
   socketIORef.current = io;
 
   console.log("Socket opened");
@@ -33,6 +30,7 @@ export const dispatchNewDataEvent = (data) => {
   if (socketIORef.current) {
     Object.values(socketIORef.clients).forEach((socket) => {
       socket.emit("new-data", data);
+      // console.log(socket);
     });
   }
 };

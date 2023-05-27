@@ -3,16 +3,18 @@ import bodyParser from "body-parser";
 import viewEngine from "./config/viewEngine";
 import initWebRouters from "./route/web";
 import cors from "cors";
+import fs from "fs";
 import http from "http";
+import https from "https";
 
 import connectDB from "./config/connectDB";
-import { openSocket } from "./config/socket";
+import { configSocket } from "./config/socket";
+import path from "path";
+const ioServer = require("socket.io");
 
 require("dotenv").config();
 
 const app = express();
-const server = http.createServer(app);
-
 // config app
 app.use(bodyParser.json());
 // app.use(methodOverride("_method"));
@@ -24,14 +26,34 @@ initWebRouters(app);
 
 connectDB();
 
-let port = process.env.PORT || 80;
-
-server.listen(port, () => {
-  console.log("Running on the port: " + port);
+const httpServer = http.createServer(app);
+httpServer.listen(process.env.HTTP_PORT || 80, () => {
+  console.log(`http server listening on port ${process.env.HTTP_PORT || 80}`);
 });
 
-openSocket(server, {
+const httpsServer = https.createServer(
+  {
+    key: fs.readFileSync(path.resolve(__dirname, "./rsa/key.pem")),
+    cert: fs.readFileSync(path.resolve(__dirname, "./rsa/cert.pem")),
+  },
+  app
+);
+httpsServer.listen(process.env.HTTP_PORT || 443, () => {
+  console.log(`http server listening on port ${process.env.HTTPS_PORT || 443}`);
+});
+
+const io = ioServer();
+
+io.attach(httpServer, {
   cors: {
     origin: "*",
   },
 });
+
+io.attach(httpsServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+configSocket(io);
