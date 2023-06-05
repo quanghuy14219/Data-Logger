@@ -3,21 +3,20 @@ const socket = io();
 socket.emit("hello", "Hello, server!");
 
 socket.on("hello", function (data) {
-  console.log("Received a message from the server: ", data);
+  console.log("Received a message from the server:", data);
 });
 
-socket.on("new-data", function (svg2m) {
-  // console.log("Server send new data: ", svg2m);
+socket.on("new-data", function (data) {
   window.postMessage(
     {
-      type: "NEW_SVG2M_DATA",
-      svg2m: svg2m,
+      type: "RELOAD_TABLE",
     },
     window.location.origin
   );
 });
 
 socket.on("force-logout", function () {
+  console.log("force-logout");
   window.dispatchEvent(new CustomEvent("logout"));
 });
 

@@ -1,0 +1,277 @@
+.cursor {
+    cursor: pointer;
+}
+
+.cursor:hover {
+    background-color: #DDDDDD;
+}
+
+/* Nút thêm tài khoản mới */
+
+button.btn.btn-primary {
+    margin: 5px 30px;
+    border-radius: 10px;
+}
+
+/* Thêm tài khoản mới */
+.modal-dialog {
+    margin: 100px auto;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.modal-header {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-title {
+    font-weight: bold;
+    color: #333;
+    margin: 0 20px;
+}
+
+.modal-body {
+    text-align: center;
+    margin: 30px 0;
+}
+
+#add-account-container {
+    padding: 10px;
+}
+
+#username-container,
+#password-container,
+#confirm-password-container {
+    margin: 10px 0;
+    text-align: left;
+}
+
+#username-container span,
+#password-container span,
+#confirm-password-container span {
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#username-input::placeholder,
+#password-input::placeholder,
+#confirm-password-input::placeholder {
+    opacity: 0.5;
+    font-style: italic;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+h5.notification {
+    color: red;
+    text-align: left;
+    margin: 5px 0 0;
+    font-size: medium;
+    font-style: italic;
+}
+
+#add-account-notification {
+    text-align: left;
+    margin: 10px 0 0;
+}
+
+#btn-add-account {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color .2s ease-in-out;
+}
+
+#btn-add-account:hover {
+    background-color: #006fe6;
+}
+
+.modal-footer {
+    border-top: 1px solid #ddd;
+    text-align: right;
+    padding: 10px 0 0;
+}
+
+.btn-secondary {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 30px;
+    font-weight: bold;
+    background-color: #e9ecef;
+    margin-right: 10px;
+}
+
+.btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.btn-close:hover {
+    color: #333;
+}
+
+/* Thêm tài khoản mới */
+.tab-content {
+    background-color: #fff;
+    color: #000;
+    font-size: 16px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.tab-pane-inf-id {
+    font-weight: bold;
+    color: #333;
+}
+
+.tab-pane-change-password-container,
+.tab-pane-logout-container,
+.tab-pane-delete-account-container {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-info,
+.btn-danger {
+    font-size: 16px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-info:hover,
+.btn-danger:hover {
+    opacity: 0.8;
+}
+
+#btn-change-password,
+#btn-logout-account,
+#btn-delete-account {
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .tab-pane-change-password-container,
+    .tab-pane-logout-container,
+    .tab-pane-delete-account-container {
+        margin: 5px 0;
+        padding: 5px;
+    }
+
+    .btn-info,
+    .btn-danger {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+.tab-pane h6 {
+    margin-top: 20px;
+}
+
+h5#offcanvasRightLabel {
+    margin-top: 3%;
+    margin-left: 3%;
+}
+
+/* Bảng tài khoản */
+
+td,
+th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 16px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    background-color: #fff;
+    padding: 5px 0;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    padding: 5px 10px;
+    text-decoration: none;
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    color: #666;
+}
+
+.dropdown-content a:hover {
+    color: #333;
+}
+
+th {
+    border: 1px solid #ddd;
+}
+
+td {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+td:first-child {
+    border-left: none;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr:first-child td {
+    border-top: 1px solid #ddd;
+}
+
+tr:last-child td {
+    border-bottom: 1px solid #ddd;
+}
+
+tr:not(:last-child) td:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+td+td {
+    border-left: 1px solid #ddd;
+}

@@ -29,7 +29,17 @@ const viewSvg2mPage = async (req, res) => {
   });
 };
 
+const loginPage = (req, res) => {
+  return res.render("login.ejs");
+};
+
+const userPage = (req, res) => {
+  return res.render("user-management.ejs");
+};
+
 module.exports = {
   viewSVG2M,
   viewSvg2mPage,
+  loginPage,
+  userPage,
 };

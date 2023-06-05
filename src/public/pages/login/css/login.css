@@ -1,0 +1,71 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 50px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+}
+
+.username-container,
+.password-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.notification {
+    color: red;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+}
+
+button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #3e8e41;
+}
+
+.username-container,
+.password-container {
+    display: block;
+}
+
+body {
+    margin: 0px !important;
+    padding: 0px !important;
+    background: url("https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?cs=srgb&dl=pexels-pixabay-259280.jpg&fm=jpg");
+    background-size: 100% auto;
+}
+
+.login-container {
+    margin-left: 10%;
+    margin-top: 85px;
+}
+
+button#login-button {
+    text-transform: uppercase;
+}

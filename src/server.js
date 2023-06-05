@@ -10,9 +10,12 @@ import https from "https";
 import connectDB from "./config/connectDB";
 import { configSocket } from "./config/socket";
 import path from "path";
+import { initAll } from "./db/migrates";
 const ioServer = require("socket.io");
 
 require("dotenv").config();
+
+initAll();
 
 const app = express();
 // config app

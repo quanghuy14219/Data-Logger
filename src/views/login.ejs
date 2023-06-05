@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- Page -->
+    <link rel="stylesheet" href="/pages/login/css/view.css">
+    <link rel="stylesheet" href="/pages/login/css/login.css">
+    <script src="/pages/login/js/login.js"></script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <header style="position: sticky; top: 0; z-index: 11;">
+        <div class="logo">
+            <img src="\images\logo.png" alt="SVG-2M" />
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/view">Home</a></li>
+                <li><a href="/view/svg2m">SVG2M</a></li>
+                <li><a href="/view/management">Management</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="login-container">
+            <div class="username-container">
+                <h5 class="notification" id="username-notification"></h5>
+                <span>Username: </span>
+                <input type="text" id="username-input" onclick="clearNotification()"
+                    onkeypress="handleKeyPressUsername(event)" onfocus="clearNotification()">
+            </div>
+            <div class="password-container">
+                <h5 class="notification" id="password-notification"></h5>
+                <span>Password: </span>
+                <input type="password" id="password-input" onclick="clearNotification()"
+                    onkeypress="handleKeyPressPassword(event)" onfocus="clearNotification()">
+            </div>
+            <h5 class="notification" id="login-notification"></h5>
+            <button id="login-button" onclick="login()">Login</button>
+        </div>
+    </main>
+</body>
+
+</html>
