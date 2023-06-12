@@ -81,14 +81,19 @@ const querySeries = async (req, res) => {
   }
 
   if (user.role === "USER") {
-    let series = user.series;
+    let userSeries = await dataService.queryUserSeries(user.series);
+    if (!userSeries) {
+      return req.status(500).json({
+        err: "Internal server error",
+      });
+    }
     if (prefix) {
-      series = series.filter((seri) => seri.startsWith(prefix));
+      userSeries = userSeries.filter((seri) => seri.seriStr.startsWith(prefix));
     }
 
     const startIndex = page && limit ? (page - 1) * limit : 0;
-    series = series.slice(startIndex, startIndex + (limit || 5));
-    return res.status(200).json(series);
+    userSeries = userSeries.slice(startIndex, startIndex + (limit || 5));
+    return res.status(200).json(userSeries);
   }
 
   query.page = page && !isNaN(page) && Number(page);

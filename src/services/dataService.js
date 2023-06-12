@@ -124,6 +124,22 @@ const querySeries = async (query) => {
   }
 };
 
+const queryUserSeries = async (series) => {
+  if (!series || series.length === 0) {
+    return [];
+  }
+  try {
+    const userSeries = await Seri.find({
+      seriStr: {
+        $in: series,
+      },
+    }).exec();
+    return userSeries;
+  } catch (error) {
+    return null;
+  }
+};
+
 const createSeri = async (seri) => {
   try {
     const seriDB = await Seri.findOne({
@@ -175,4 +191,5 @@ module.exports = {
   createSeri,
   findSeriById,
   getAllSeries,
+  queryUserSeries,
 };
