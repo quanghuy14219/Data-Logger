@@ -4,6 +4,14 @@ socket.emit("hello", "Hello, server!");
 
 socket.on("hello", function (data) {
   console.log("Received a message from the server: ", data);
+  try {
+    const auth = localStorage.getItem("auth");
+    if (auth) {
+      const { user, token } = JSON.parse(auth);
+      console.log("Authenticated");
+      token && socket.emit("authorization", token);
+    }
+  } catch (error) {}
 });
 
 socket.on("authorization", function (res) {
@@ -18,7 +26,7 @@ socket.on("list-client", function (clients) {
       detail: clients,
     })
   );
-  console.log(clients);
+  // console.log(clients);
 });
 
 socket.on("client-change-state", function (client) {
@@ -27,7 +35,7 @@ socket.on("client-change-state", function (client) {
       detail: client,
     })
   );
-  console.log(client);
+  // console.log(client);
 });
 
 socket.on("new-account", function (account) {
@@ -36,7 +44,44 @@ socket.on("new-account", function (account) {
       detail: account,
     })
   );
-  console.log(account);
+  // console.log(account);
+});
+
+socket.on("new-seri", function (seri) {
+  window.dispatchEvent(
+    new CustomEvent("new-seri", {
+      detail: seri,
+    })
+  );
+  console.log(seri);
+});
+
+socket.on("change-info", function (account) {
+  window.dispatchEvent(
+    new CustomEvent("change-info", {
+      detail: account,
+    })
+  );
+  // console.log(account);
+});
+
+socket.on("change-seri-info", function (seri) {
+  window.dispatchEvent(
+    new CustomEvent("change-seri-info", {
+      detail: seri,
+    })
+  );
+  console.log(seri);
+});
+
+socket.on("change-series", function (account) {
+  window.dispatchEvent(
+    new CustomEvent("change-series", {
+      detail: account,
+    })
+  );
+  // console.log(account);
+  // console.log(account);
 });
 
 socket.on("delete-account", function (account) {

@@ -129,6 +129,7 @@ const dataValidCheck = async (req, res, next) => {
 
   const timeStamp = params.date + " " + params.time;
   svg2mData.time = stringToDate(timeStamp);
+  svg2mData.seriStr = svg2mData.seri.toString();
 
   // Check duplicate seri and time
   const svg2mExisted = await dataService.isExisted(

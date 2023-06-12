@@ -35,60 +35,6 @@ function convertStringToDate(datePart, timePart) {
   return date;
 }
 
-const generateSamples = (count = 1728) => {
-  const data = [];
-  const randomFloat = (begin = 0, end = 1) =>
-    Math.random() * (end - begin) + begin;
-  const beginTime = Date.now();
-  for (let idx = 0; idx < count; idx += 1) {
-    const timeInt = beginTime + idx * 15 * 60 * 1000 + idx * 1000;
-    const [date, time] = convertMillisecondsToDate(timeInt);
-    data.push({
-      seri: "sample seri",
-      date: date,
-      time: time,
-      longitude: randomFloat(0, 180),
-      latitude: randomFloat(0, 180),
-      mode: randomFloat(0, 1) > 0.5 ? 1 : 0,
-      draDoseRate: randomFloat(),
-      draDose: randomFloat(),
-      neutron: randomFloat(),
-      actAlpha: randomFloat(),
-      actBeta: randomFloat(),
-      actGamma: randomFloat(),
-    });
-  }
-  return data;
-};
-
-const chartRef = {
-  ready: false,
-  root: null,
-  series: null,
-  sbseries: null,
-  label: null,
-};
-
-const loadDataToChart = (data) => {
-  if (chartRef.ready) {
-    const { series, sbseries, root, label } = chartRef;
-    series.data.setAll(data);
-    series.bullets.push(function () {
-      return am5.Bullet.new(root, {
-        sprite: am5.Circle.new(root, {
-          radius: 5,
-          fill: series.get("fill"),
-          stroke: root.interfaceColors.get("background"),
-          strokeWidth: 2,
-        }),
-      });
-    });
-    sbseries.data.setAll(data);
-    label.set("text", currentLabel);
-  }
-  console.log("Chart loaded");
-};
-
 class SVG2MChart {
   constructor(root) {
     this.root = root;
@@ -126,7 +72,7 @@ class SVG2MChart {
     );
     this.xAxis.children.push(
       am5.Label.new(this.root, {
-        text: "Timestamp (UTC)",
+        text: "Thời gian (GMT+7)",
         textAlign: "center",
         x: am5.percent(50),
         centerX: am5.percent(50),
@@ -147,8 +93,9 @@ class SVG2MChart {
       text: "DRA Dose Rate \n (µSv / h)",
       textAlign: "center",
       y: am5.p50,
-      fontSize: 16,
+      fontSize: 20,
       rotation: -90,
+      fill: am5.color(0x095256),
     });
     this.draDoseRateYAxis.children.unshift(this.draDoseRateYLabel);
 
@@ -164,8 +111,9 @@ class SVG2MChart {
       text: "ACT - Alpha \n (CPS)",
       textAlign: "center",
       y: am5.p50,
-      fontSize: 16,
+      fontSize: 20,
       rotation: -90,
+      fill: am5.color(0x1a5a95),
     });
     this.actAlphaYAxis.children.unshift(this.actAlphaYLabel);
 
@@ -181,10 +129,29 @@ class SVG2MChart {
       text: "ACT - Beta \n (CPS)",
       textAlign: "center",
       y: am5.p50,
-      fontSize: 16,
+      fontSize: 20,
       rotation: -90,
+      fill: am5.color(200, 100, 0),
     });
     this.actBetaYAxis.children.unshift(this.actBetaYLabel);
+
+    // ACT Gamma Y Axis
+    this.actGammaYAxis = this.chart.yAxes.push(
+      am5xy.ValueAxis.new(this.root, {
+        renderer: am5xy.AxisRendererY.new(this.root, {}),
+        tooltip: am5.Tooltip.new(this.root, {}),
+        marginTop: 30,
+      })
+    );
+    this.actGammaYLabel = am5.Label.new(this.root, {
+      text: "ACT - Gamma \n (µSv/h)",
+      textAlign: "center",
+      y: am5.p50,
+      fontSize: 20,
+      rotation: -90,
+      fill: am5.color(200, 100, 0),
+    });
+    this.actGammaYAxis.children.unshift(this.actGammaYLabel);
 
     // Stack Y-axes
     this.chart.leftAxesContainer.set("layout", this.root.verticalLayout);
@@ -223,6 +190,19 @@ class SVG2MChart {
         xAxis: this.xAxis,
         yAxis: this.actBetaYAxis,
         valueYField: "actBeta",
+        valueXField: "date",
+        tooltip: am5.Tooltip.new(this.root, {
+          labelText: "{valueY}",
+        }),
+      })
+    );
+
+    this.actGammaSeries = this.chart.series.push(
+      am5xy.LineSeries.new(this.root, {
+        name: "Series",
+        xAxis: this.xAxis,
+        yAxis: this.actGammaYAxis,
+        valueYField: "actGamma",
         valueXField: "date",
         tooltip: am5.Tooltip.new(this.root, {
           labelText: "{valueY}",
@@ -294,6 +274,7 @@ class SVG2MChart {
     this.draDoseRateSeries.appear(1000, 0);
     this.actAlphaSeries.appear(1000, 0);
     this.actBetaSeries.appear(1000, 0);
+    this.actGammaSeries.appear(1000, 0);
     this.chart.appear(1000, 0);
   }
 
@@ -336,9 +317,23 @@ class SVG2MChart {
       });
     });
 
+    // ACT Gamma
+    this.actGammaSeries.data.setAll(data);
+    this.actGammaSeries.bullets.push(() => {
+      return am5.Bullet.new(this.root, {
+        sprite: am5.Circle.new(this.root, {
+          radius: 5,
+          fill: this.actGammaSeries.get("fill"),
+          stroke: this.root.interfaceColors.get("background"),
+          strokeWidth: 2,
+        }),
+      });
+    });
+
     this.sbDraDoseRateSeries.data.setAll(data);
     this.sbActAlphaSeries.data.setAll(data);
     this.sbActBetaSeries.data.setAll(data);
+    // this.sbActGammaSeries.data.setAll(data);
   }
 }
 
@@ -364,6 +359,7 @@ am5.ready(() => {
           draDoseRate: svg2m.draDoseRate,
           actAlpha: svg2m.actAlpha,
           actBeta: svg2m.actBeta,
+          actGamma: svg2m.actGamma,
         };
       });
       data.sort((d1, d2) => d1.date - d2.date);

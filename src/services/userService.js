@@ -53,10 +53,50 @@ const removeById = async (id) => {
   }
 };
 
+const removeSeries = async (id, series) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          series: {
+            $in: series,
+          },
+        },
+      },
+      { new: true }
+    );
+    return user || -1;
+  } catch (error) {
+    return null;
+  }
+};
+
+const pushSeries = async (id, series) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        $addToSet: {
+          series: {
+            $each: series,
+          },
+        },
+      },
+      { new: true }
+    );
+    return user || -1;
+  } catch (error) {
+    return null;
+  }
+};
+
 module.exports = {
   findByUsername,
   createUser,
   findById,
   getAll,
   removeById,
+  removeSeries,
+  pushSeries,
 };

@@ -4,6 +4,14 @@ socket.emit("hello", "Hello, server!");
 
 socket.on("hello", function (data) {
   console.log("Received a message from the server: ", data);
+  try {
+    const auth = localStorage.getItem("auth");
+    if (auth) {
+      const { user, token } = JSON.parse(auth);
+      console.log("Authenticated");
+      token && socket.emit("authorization", token);
+    }
+  } catch (error) {}
 });
 
 socket.on("new-data", function (svg2m) {

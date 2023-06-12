@@ -1,4 +1,4 @@
-import { SVG2M } from "../db/models";
+import { SVG2M, Seri } from "../db/models";
 
 const isExisted = async (seri, time) => {
   try {
@@ -101,27 +101,65 @@ const queryData = async (query) => {
 
 const querySeries = async (query) => {
   let { prefix, page, limit } = query;
-  const opts = [{ $group: { _id: "$seri" } }];
+  let querySeries = prefix
+    ? Seri.find({
+        seriStr: {
+          $regex: prefix,
+        },
+      })
+    : Seri.find();
 
   // Pagination
   let startIndex = page && limit ? (page - 1) * limit : 0;
-  opts.push({ $skip: startIndex });
-  limit && opts.push({ $limit: limit });
+  querySeries = querySeries.skip(startIndex);
+  if (limit) {
+    querySeries = querySeries.limit(limit);
+  }
 
   try {
-    const series = await SVG2M.distinct("seri");
-    if (!prefix || !series) {
-      return series.slice(startIndex || 0, limit || filterPrefix.length);
-    }
-    const filterPrefix = series.filter((seri) => {
-      return seri.toString().startsWith(prefix);
-    });
+    const series = await querySeries.exec();
+    return series;
+  } catch (error) {
+    return null;
+  }
+};
 
-    const filterPagination = filterPrefix.slice(
-      startIndex || 0,
-      limit || filterPrefix.length
-    );
-    return filterPagination;
+const createSeri = async (seri) => {
+  try {
+    const seriDB = await Seri.findOne({
+      seri: seri,
+    }).exec();
+    if (!seriDB) {
+      const newSeri = new Seri({
+        seri: seri,
+        seriStr: seri.toString(),
+      });
+      await newSeri.save();
+      return newSeri;
+    }
+    return -1;
+  } catch (error) {
+    return false;
+  }
+};
+
+const findSeriById = async (id) => {
+  try {
+    const seri = await Seri.findById(id).exec();
+    return seri || -1;
+  } catch (error) {
+    return null;
+  }
+};
+
+const getAllSeries = async () => {
+  try {
+    const series = await Seri.find()
+      .sort({
+        createAt: -1,
+      })
+      .exec();
+    return series;
   } catch (error) {
     return null;
   }
@@ -134,4 +172,7 @@ module.exports = {
   queryData,
   isExisted,
   querySeries,
+  createSeri,
+  findSeriById,
+  getAllSeries,
 };

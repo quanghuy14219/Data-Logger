@@ -52,7 +52,7 @@ export const configSocket = (io) => {
 
     socket.on("authorization", function (token) {
       if (!token) {
-        socket.emit(authorization, {
+        socket.emit("authorization", {
           err: "Token can not empty",
           code: 400,
         });
@@ -60,7 +60,7 @@ export const configSocket = (io) => {
       }
       const jwtUser = jwtService.verifyToken(token);
       if (!jwtUser) {
-        socket.emit(authorization, {
+        socket.emit("authorization", {
           err: "Token invalid",
           code: 400,
         });
@@ -98,6 +98,17 @@ export const dispatchNewAccountEvent = (account) => {
   });
 };
 
+export const dispatchNewSeriEvent = (seri) => {
+  Object.values(socketIORef.clients).forEach((socket) => {
+    const role = socket?.auth?.role;
+    if (role && role === "ADMIN") {
+      socket.emit("new-seri", {
+        seri: seri,
+      });
+    }
+  });
+};
+
 export const dispatchDeleteAccountEvent = (id) => {
   Object.values(socketIORef.clients).forEach((socket) => {
     const role = socket?.auth?.role;
@@ -115,6 +126,39 @@ export const dispatchLogoutEvent = (id) => {
     const _id = socket?.auth?._id;
     if (_id === id.toString()) {
       socket.emit("force-logout");
+    }
+  });
+};
+
+export const dispatchChangeInfoEvent = (account) => {
+  Object.values(socketIORef.clients).forEach((socket) => {
+    const role = socket?.auth?.role;
+    if (role && role === "ADMIN") {
+      socket.emit("change-info", {
+        account: account,
+      });
+    }
+  });
+};
+
+export const dispatchChangeSeriInfoEvent = (seri) => {
+  Object.values(socketIORef.clients).forEach((socket) => {
+    const role = socket?.auth?.role;
+    if (role && role === "ADMIN") {
+      socket.emit("change-seri-info", {
+        seri: seri,
+      });
+    }
+  });
+};
+
+export const dispatchChangeSeriesEvent = (account) => {
+  Object.values(socketIORef.clients).forEach((socket) => {
+    const role = socket?.auth?.role;
+    if (role && role === "ADMIN") {
+      socket.emit("change-series", {
+        account: account,
+      });
     }
   });
 };

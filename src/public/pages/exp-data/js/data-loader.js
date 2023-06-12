@@ -47,7 +47,7 @@ const renderTable = (svg2mData, clear = true, indexStart = 1) => {
         cells[key] = row.insertCell();
       });
       Object.keys(cells).forEach((key) => {
-        cells[key].innerHTML = data[key] || "";
+        cells[key].innerHTML = data[key] === undefined ? "" : data[key];
       });
     });
   }

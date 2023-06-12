@@ -1,7 +1,7 @@
 const logout = () => {
   localStorage.removeItem("auth");
   window.location.assign(
-    `${window.location.origin}/view/login?redirect=${window.location.href}`
+    `${window.location.origin}/login?redirect=${window.location.href}`
   );
 };
 

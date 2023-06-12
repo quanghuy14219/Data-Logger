@@ -5,9 +5,6 @@ import { dataMiddleware } from "../middlewares";
 const router = express.Router();
 
 const initWebRouters = (app) => {
-  router.get("/", (req, res) => {
-    return res.status(200).send("Hello");
-  });
   // For post new svg2m data
   router.get(
     "/api/data",
@@ -16,25 +13,30 @@ const initWebRouters = (app) => {
   );
   // For get svg2m data
   router.get("/api/data/pagination", dataController.getDataByQuery);
-  router.get("/view", viewController.viewSVG2M);
 
   // View page
-  router.get("/view/svg2m", viewController.viewSvg2mPage);
+  router.get("/table-data", viewController.viewSVG2M);
+  router.get("/", viewController.viewSvg2mPage);
+  router.get("/login", viewController.loginPage);
+  router.get("/management", viewController.userPage);
 
   router.get("/api/svg2m", dataMiddleware.parseQuery, dataController.getData);
-
   router.get("/api/svg2m/series", dataController.querySeries);
 
   // user
   router.post("/api/user/login", userController.login);
   router.post("/api/user/token", userController.refreshToken);
-  router.get("/view/login", viewController.loginPage);
-  router.get("/view/management", viewController.userPage);
   router.get("/api/user", userController.getAllUsers);
   router.post("/api/user", userController.createAccount);
   router.delete("/api/user/:id", userController.deleteAccount);
   router.get("/api/user/logout/:id", userController.logoutUser);
-  router.put("/api/user", userController.changePassword);
+  router.put("/api/user/password", userController.changePassword);
+  router.put("/api/user/info", userController.changeInfo);
+  router.put("/api/user/series", userController.updateSeries);
+
+  // seri
+  router.put("/api/series", dataController.changeSeriInfo);
+  router.get("/api/series", dataController.getAllSeries);
 
   return app.use("/", router);
 };

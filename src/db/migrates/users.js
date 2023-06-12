@@ -5,23 +5,16 @@ const users = [
     username: "admin",
     password: "svg2m12345678",
     role: "ADMIN",
-    permissions: {
-      pushData: true,
-      deleteData: true,
-      getData: true,
-      updateData: true,
-      createAccount: true,
-      deleteAccount: true,
-      updateAccount: true,
-    },
+    unit: "Bộ đội Biên Phòng Bắc Giang",
+    phone: "0384850711",
   },
   {
     username: "user1",
     password: "svg2m12345678",
     role: "USER",
-    permissions: {
-      getData: true,
-    },
+    unit: "Bộ đội Biên Phòng Hà Tĩnh",
+    phone: "0384850711",
+    series: ["6050071"],
   },
 ];
 

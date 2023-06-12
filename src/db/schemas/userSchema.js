@@ -11,36 +11,10 @@ const userSchema = new Schema({
     type: Boolean,
     default: true,
   },
-  permissions: {
-    pushData: {
-      type: Boolean,
-      default: false,
-    },
-    deleteData: {
-      type: Boolean,
-      default: false,
-    },
-    getData: {
-      type: Boolean,
-      default: false,
-    },
-    updateData: {
-      type: Boolean,
-      default: false,
-    },
-    createAccount: {
-      type: Boolean,
-      default: false,
-    },
-    deleteAccount: {
-      type: Boolean,
-      default: false,
-    },
-    updateAccount: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  unit: String,
+  phone: String,
+  series: [String],
   createAt: { type: Date, default: Date.now },
+  validAt: { type: Date, default: Date.now },
 });
 export default userSchema;

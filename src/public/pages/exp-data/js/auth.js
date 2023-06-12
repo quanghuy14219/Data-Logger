@@ -1,7 +1,7 @@
 const logout = () => {
   localStorage.removeItem("auth");
   window.location.assign(
-    `${window.location.origin}/view/login?redirect=${window.location.href}`
+    `${window.location.origin}/login?redirect=${window.location.href}`
   );
 };
 
@@ -40,6 +40,9 @@ window.addEventListener("logout", function (event) {
             logout();
           }
           if (!data.err) {
+            if (!data?.user?.role || data.user.role !== "ADMIN") {
+              window.location.assign(`${window.location.origin}/svg2m`);
+            }
             localStorage.setItem("auth", JSON.stringify(data));
             window.dispatchEvent(
               new CustomEvent("authentication complete", {

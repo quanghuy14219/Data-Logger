@@ -2,6 +2,7 @@ import { Schema } from "mongoose";
 
 const svg2mSchema = new Schema({
   seri: Number,
+  seriStr: String,
   time: Date,
   longitude: Number,
   latitude: Number,

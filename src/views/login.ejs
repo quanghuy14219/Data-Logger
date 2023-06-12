@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Đăng nhập SVG-2M</title>
 
     <!-- Page -->
     <link rel="stylesheet" href="/pages/login/css/view.css">
@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <header style="position: sticky; top: 0; z-index: 11;">
+    <!-- <header style="position: sticky; top: 0; z-index: 11;">
         <div class="logo">
             <img src="\images\logo.png" alt="SVG-2M" />
         </div>
@@ -29,9 +29,10 @@
                 <li><a href="/view/management">Management</a></li>
             </ul>
         </nav>
-    </header>
-    <main>
+    </header> -->
+    <main id="main">
         <div class="login-container">
+            <div class="login-title">Hệ thống theo dõi dữ liệu SVG-2M</div>
             <div class="username-container">
                 <h5 class="notification" id="username-notification"></h5>
                 <span>Username: </span>
@@ -40,14 +41,35 @@
             </div>
             <div class="password-container">
                 <h5 class="notification" id="password-notification"></h5>
-                <span>Password: </span>
+                <span>Mật khẩu: </span>
                 <input type="password" id="password-input" onclick="clearNotification()"
                     onkeypress="handleKeyPressPassword(event)" onfocus="clearNotification()">
             </div>
+            <div class="forget-password" href="#" onclick="showDialog()">Quên mật khẩu?</div>
             <h5 class="notification" id="login-notification"></h5>
-            <button id="login-button" onclick="login()">Login</button>
+            <button id="login-button" onclick="login()">Đăng nhập</button>
         </div>
     </main>
+    <div id="dialog" style="display: none;">
+        <div>Xin vui lòng liên hệ:</div>
+        <br />
+        <div class="dialog-address">
+            <div>Phòng Gia tốc và Điện tử Hạt nhân</div>
+            <div>Trung tâm chiếu xạ Hà Nội</div>
+            <div>Viện Năng Lượng Nguyên Tử Việt Nam</div>
+        </div>
+        <br />
+        <div style="display: inline-block;">
+            <span>Số điện thoại:</span>
+            <span style="margin-left: 30px;">0835665062</span>
+        </div>
+        <div style="display: inline-block;">
+            <span>Email:</span>
+            <span style="margin-left: 82px;">hungxom933@gmail.com</span>
+        </div>
+        <br /><br />
+        <button onclick="closeDialog()">Đóng</button>
+    </div>
 </body>
 
 </html>

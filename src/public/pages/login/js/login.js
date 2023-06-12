@@ -49,7 +49,17 @@ const login = async () => {
       const data = res?.data;
       if (data) {
         localStorage.setItem("auth", JSON.stringify(data));
-        redirect();
+        if (!redirect()) {
+          const { user } = data;
+          switch (user.role) {
+            case "ADMIN":
+              window.location.assign(`${window.location.origin}/management`);
+              break;
+            case "USER":
+              window.location.assign(`${window.location.origin}`);
+              break;
+          }
+        }
       }
     })
     .catch((err) => {
@@ -79,12 +89,10 @@ const login = async () => {
           const { user } = data;
           switch (user.role) {
             case "ADMIN":
-              window.location.assign(
-                `${window.location.origin}/view/management`
-              );
+              window.location.assign(`${window.location.origin}/management`);
               break;
             case "USER":
-              window.location.assign(`${window.location.origin}/view/svg2m`);
+              window.location.assign(`${window.location.origin}`);
               break;
           }
         }
@@ -106,3 +114,19 @@ const redirect = () => {
   }
   return false;
 };
+
+function showDialog() {
+  var dialog = document.getElementById("dialog");
+  dialog.style.display = "flex";
+
+  var dialog = document.getElementById("main");
+  dialog.style.display = "none";
+}
+
+function closeDialog() {
+  var dialog = document.getElementById("dialog");
+  dialog.style.display = "none";
+
+  var dialog = document.getElementById("main");
+  dialog.style.display = "flex";
+}

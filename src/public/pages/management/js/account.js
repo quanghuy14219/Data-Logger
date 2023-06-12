@@ -74,6 +74,8 @@ async function addAccount() {
   if (validCheck()) {
     const username = document.getElementById("username-input").value;
     const password = document.getElementById("password-input").value;
+    const unit = document.getElementById("unit-input").value || "";
+    const phone = document.getElementById("contact-input").value || "";
     const auth = localStorage.getItem("auth");
     if (!auth) {
       logout();
@@ -86,6 +88,8 @@ async function addAccount() {
           {
             username: username,
             password: password,
+            unit: unit,
+            phone: phone,
           },
           {
             headers: {

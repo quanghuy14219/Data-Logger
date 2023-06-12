@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Management</title>
+    <title>Quản lý</title>
 
     <link rel="stylesheet" href="/pages/management/css/view.css">
     <link rel="stylesheet" href="/pages/management/css/page.css">
@@ -21,6 +21,8 @@
     <!-- Socket -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/pages/management/js/socket.js"></script>
+    <script src="/pages/management/js/search.js"></script>
+
 
     <!-- Auth -->
     <script src="/pages/management/js/auth.js"></script>
@@ -29,19 +31,20 @@
     <script src="/pages/management/js/data-loader.js"></script>
     <script src="/pages/management/js/account.js"></script>
     <script src="/pages/management/js/action.js"></script>
+    <script src="/pages/management/js/seriOffCanvas.js"></script>
 
 </head>
 
 <body>
     <header style="position: sticky; top: 0; z-index: 11;">
         <div class="logo">
-            <img src="\images\logo.png" alt="SVG-2M" />
+            <img src="\images\logo-bchh.png" alt="SVG-2M" />
         </div>
         <nav>
             <ul>
-                <li><a href="/view">Home</a></li>
-                <li><a href="/view/svg2m">SVG2M</a></li>
-                <li><a onclick="logout()">Logout</a></li>
+                <!-- <li><a href="/">Home</a></li> -->
+                <li><a href="/">Trang chủ</a></li>
+                <li><a onclick="logout()">Đăng xuất</a></li>
             </ul>
         </nav>
     </header>
@@ -67,6 +70,16 @@
                             <input type="text" id="username-input" placeholder="Nhập username"
                                 onfocus="clearNotification()">
                         </div>
+                        <div id="unit-container">
+                            <h5 class="notification" id="unit-notification"></h5>
+                            <span>Đơn vị: </span>
+                            <input type="text" id="unit-input" placeholder="Nhập đơn vị" onfocus="clearNotification()">
+                        </div>
+                        <div id="contact-container">
+                            <h5 class="notification" id="contact-notification"></h5>
+                            <span>SĐT: </span>
+                            <input type="text" id="contact-input" placeholder="Nhập SĐT" onfocus="clearNotification()">
+                        </div>
                         <div id="password-container">
                             <h5 class="notification" id="password-notification"></h5>
                             <span>Mật khẩu: </span>
@@ -79,7 +92,7 @@
                             <input type="password" id="confirm-password-input" placeholder="Nhập lại mật khẩu"
                                 onfocus="clearNotification()">
                         </div>
-                        <h5 id="add-account-notification"></h5>
+                        <h5 id="add-account-notification" class="notification"></h5>
                     </div>
                     <button id="btn-add-account" onclick="addAccount()">Thêm</button>
                 </div>
@@ -108,10 +121,14 @@
                     <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
                         type="button" role="tab" aria-controls="home" aria-selected="true">Thông tin</button>
                 </li>
-                <!-- <li class="nav-item" role="presentation">
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
-                        type="button" role="tab" aria-controls="profile" aria-selected="false">Hành động</button>
-                </li> -->
+                        type="button" role="tab" aria-controls="profile" aria-selected="false">Tài khoản</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="access-tab" data-bs-toggle="tab" data-bs-target="#access" type="button"
+                        role="tab" aria-controls="access" aria-selected="false">Quyền truy cập</button>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -121,15 +138,20 @@
                     <br>
                     <span>Ngày tạo: </span> <span id="action-pane-inf-createAt"></span>
                     <br>
-
-                    <div id="tabpane-change-password-container">
-                        <h6>Đổi mật khẩu</h6>
-                        <input type="password" id="tabpane-new-password-input"
-                            onkeyup="handleChangePasswordInput(event)">
-                        <button type="button" class="btn btn-info" id="btn-change-password" style="display: none;"
-                            onclick="changePassword()">
-                            Lưu thay đổi</button>
+                    <div id="tabpane-change-unit-container">
+                        <h6>Đơn vị</h6>
+                        <input type="text" id="tabpane-new-unit-input" onkeyup="handleChangeUnitAndContactInput(event)">
                     </div>
+                    <div id="tabpane-change-contact-container">
+                        <h6>Liên hệ</h6>
+                        <input type="text" id="tabpane-new-contact-input"
+                            onkeyup="handleChangeUnitAndContactInput(event)">
+                    </div>
+                    <button type="button" class="btn btn-info" id="btn-change-unit-contact" style="display: none;"
+                        onclick="changeInfo()">
+                        Lưu thay đổi</button>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div id="tabpane-logout-container">
                         <h6>Đăng xuất</h6>
                         <p>Điều này sẽ đăng xuất tài khoản khỏi tất cả thiết bị đang đăng nhập</p>
@@ -145,9 +167,29 @@
                             onclick="deleteAccount()">Xóa
                             tài khoản</button>
                     </div>
+                    <div id="tabpane-change-password-container">
+                        <h6>Đổi mật khẩu</h6>
+                        <p>Đổi mật khẩu của tài khoản hiện tại</p>
+                        <input type="password" id="tabpane-new-password-input"
+                            onkeyup="handleChangePasswordInput(event)">
+                        <button type="button" class="btn btn-info" id="btn-change-password" style="display: none;"
+                            onclick="changePassword()">
+                            Lưu thay đổi</button>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="tab-pane fade" id="access" role="tabpanel" aria-labelledby="access-tab">
+                    <h6>Quyền truy cập vào</h6>
+                    <ul id="access-series-container">
 
+                    </ul>
+                    <hr>
+                    <div class="search-container" id="tab-pane-search-box-container">
+                        <div id="search-box" class="dropdown-content">
+                            <input type="text" placeholder="Tìm kiếm seri..." id="input-seri" onkeyup="loadOptions()"
+                                onclick="showOptions()">
+                            <div id="search-options"></div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -160,10 +202,12 @@
             <table id="users-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <!-- <th>ID</th> -->
                         <th>Tài khoản</th>
                         <th>Vai trò</th>
-                        <th>Ngày tạo</th>
+                        <th>Đơn vị</th>
+                        <th>SĐT</th>
+                        <!-- <th>Ngày tạo</th> -->
                         <th>Trạng thái</th>
                     </tr>
                 </thead>
@@ -174,7 +218,63 @@
                 </tbody>
             </table>
         </div>
-        <hr />
+    </div>
+    <hr>
+
+    <!-- Table series -->
+    <div class="w3-content" style="max-width: 100%">
+        <div class="w3-center w3-hide-small tableFixHead">
+            <table id="series-table">
+                <thead>
+                    <tr>
+                        <!-- <th>ID</th> -->
+                        <th>Seri</th>
+                        <th>Đơn vị</th>
+                        <th>SĐT</th>
+                        <!-- <th>Ngày tạo</th> -->
+                    </tr>
+                </thead>
+                <tbody id="tbl_series">
+                    <tr id="seriRow">
+                        <td colspan="4">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Off canvas seri -->
+    <button class="btn btn-primary" type="button" style="display: none;" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasSeri" aria-controls="offcanvasSeri" id="btn-show-seri-pane">Toggle right
+        offcanvas</button>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasSeri" aria-labelledby="offcanvasSeriLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasSeriLabel">Offcanvas right</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="seri-info-container">
+                <span>ID: </span> <span id="seri-pane-inf-id"></span>
+                <br>
+                <span>Ngày tạo: </span> <span id="seri-pane-inf-createAt"></span>
+                <hr>
+            </div>
+            <div class="seri-info-change-container">
+                <div id="seri-change-unit-container">
+                    <h6>Đơn vị</h6>
+                    <input type="text" id="seri-new-unit-input" onkeyup="handleChangeSeriInfo(event)">
+                </div>
+                <hr>
+                <div id="seri-change-contact-container">
+                    <h6>Liên hệ</h6>
+                    <input type="text" id="seri-new-contact-input" onkeyup="handleChangeSeriInfo(event)">
+                </div>
+                <button type="button" class="btn btn-info" id="btn-change-seri-info" style="display: none;"
+                    onclick="changeSeriInfo()">
+                    Lưu thay đổi</button>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap 5 -->

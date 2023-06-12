@@ -21,46 +21,56 @@ const loadOptions = async () => {
   const prefix = input?.value;
   const searchOptions = document.getElementById("search-options");
   if (searchOptions) {
-    const values = await axios
-      .get("/api/svg2m/series", {
-        params: {
-          prefix: prefix,
-          limit: 5,
-        },
-      })
-      .then(function (response) {
-        return response.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    if (values) {
-      // Clear
-      searchOptions.innerHTML = "";
-
-      values.forEach((value) => {
-        const aTag = document.createElement("a");
-        aTag.textContent = value;
-        searchOptions.appendChild(aTag);
-        aTag.style.display = "block";
-        aTag.addEventListener("click", () => {
-          input.value = "";
-          window.postMessage(
-            {
-              type: "RELOAD_SERI_TABLE",
-              seri: value,
-            },
-            window.location.origin
-          );
-          currentSeri = value;
-          searchOptions.style.display = "none";
-          const spanSeri = document.getElementById("current-seri");
-          if (spanSeri) {
-            spanSeri.textContent = value;
-          }
+    const auth = localStorage.getItem("auth");
+    if (!auth) {
+      logout();
+    }
+    try {
+      const { user, token } = JSON.parse(auth);
+      const values = await axios
+        .get("/api/svg2m/series", {
+          params: {
+            prefix: prefix,
+            limit: 5,
+            id: user._id,
+          },
+        })
+        .then(function (response) {
+          return response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-      });
+
+      if (values) {
+        // Clear
+        searchOptions.innerHTML = "";
+
+        values.forEach((value) => {
+          const aTag = document.createElement("a");
+          aTag.textContent = `${value.seriStr} - ${value.unit || "?"}`;
+          searchOptions.appendChild(aTag);
+          aTag.style.display = "block";
+          aTag.addEventListener("click", () => {
+            input.value = "";
+            window.postMessage(
+              {
+                type: "RELOAD_SERI_TABLE",
+                seri: value.seri,
+              },
+              window.location.origin
+            );
+            currentSeri = value.seri;
+            searchOptions.style.display = "none";
+            const spanSeri = document.getElementById("current-seri");
+            if (spanSeri) {
+              spanSeri.textContent = value.seriStr;
+            }
+          });
+        });
+      }
+    } catch (error) {
+      logout();
     }
   }
 };
