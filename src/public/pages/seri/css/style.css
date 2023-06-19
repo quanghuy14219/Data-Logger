@@ -195,8 +195,8 @@ div[style="background-color: white; font-weight: 500; font-family: Roboto, sans-
 #about {
     display: flex;
     justify-content: center;
-    /* background: url("/images/trongdong.png") center no-repeat;
-    background-size: 50% auto; */
+    background: url("/images/trongdong.jpg") center no-repeat;
+    background-size: 100% auto;
     background-color: #ed3237;
 }
 
@@ -288,6 +288,8 @@ button#btn-show-action-pane {
 
 #current-seri {
     margin-left: 20px;
+    color: rgb(90, 40, 255);
+    font-weight: 700;
 }
 
 button#btn-show-action-pane {
@@ -325,4 +327,8 @@ button.btn-danger {
 
 h4.marker-header {
     font-size: initial;
+}
+
+#about-content h2 {
+    font-weight: 900;
 }

@@ -40,6 +40,7 @@ const loadDataToTable = (svg2mData, replace = true) => {
       checkCol.appendChild(boxCheck);
       boxCheck.classList.add("fa-regular", "fa-square", "fa-xl");
       boxCheck.style.color = "rgb(0 0 0)";
+      // boxCheck.style.fontWeight = "900";
       row.addEventListener("click", (event) => {
         // Check current row is focused
         if (focusRow.boxRef && focusRow.boxRef === boxCheck) {
@@ -51,6 +52,7 @@ const loadDataToTable = (svg2mData, replace = true) => {
           focusRow.boxRef.classList.replace("fa-square-check", "fa-square");
           focusRow.boxRef.style.color = "rgb(0 0 0)";
           focusRow.row.style.color = "rgb(0 0 0)";
+          focusRow.row.style.fontWeight = "500";
         }
 
         // Update current ref
@@ -59,6 +61,7 @@ const loadDataToTable = (svg2mData, replace = true) => {
         boxCheck.classList.replace("fa-square", "fa-square-check");
         boxCheck.style.color = "rgb(90 40 255)";
         row.style.color = "rgb(90 40 255)";
+        row.style.fontWeight = "900";
 
         // Dispatch event
         window.postMessage(
