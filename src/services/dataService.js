@@ -128,6 +128,7 @@ const queryUserSeries = async (series) => {
   if (!series || series.length === 0) {
     return [];
   }
+  // console.log(series);
   try {
     const userSeries = await Seri.find({
       seriStr: {
@@ -181,6 +182,27 @@ const getAllSeries = async () => {
   }
 };
 
+const getNewestRecords = async (series) => {
+  if (!series || !Array.isArray(series) || series.length === 0) {
+    return [];
+  }
+  try {
+    const data = await SVG2M.aggregate([
+      { $match: { seriStr: { $in: series } } },
+      { $sort: { seri: 1, time: -1 } },
+      {
+        $group: {
+          _id: "$seri",
+          latestRecord: { $first: "$$ROOT" },
+        },
+      },
+    ]).exec();
+    return data;
+  } catch (error) {
+    return null;
+  }
+};
+
 module.exports = {
   saveData,
   getAllData,
@@ -192,4 +214,5 @@ module.exports = {
   findSeriById,
   getAllSeries,
   queryUserSeries,
+  getNewestRecords,
 };

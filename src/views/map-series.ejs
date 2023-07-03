@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Bản đồ hoạt động SVG-2M</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+    <!-- Page -->
+    <link rel="stylesheet" href="/pages/map-series/css/style.css">
+
+    <!-- Map -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link rel="stylesheet" type="text/css" href="/pages/map-series/css/map.css" />
+    <script type="module" src="/pages/map-series/js/map.js"></script>
+
+    <!-- Socket -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/pages/map-series/js/socket.js"></script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Auth -->
+    <script src="/pages/map-series/js/auth.js"></script>
+    <script src="/pages/seri/js/tool.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+    <div class="w3-row w3-padding-137" id="about">
+        <div>
+            <img id="quochuy" src="/images/quochuy.svg" />
+        </div>
+        <div class="w3-center w3-hide-small" id="about-content">
+            <!-- <h2>BINH CHỦNG HÓA HỌC</h2> -->
+            <h2>VIỆN HÓA HỌC MÔI TRƯỜNG QUÂN SỰ</h2>
+            <h2>Hệ thống theo dõi dữ liệu thiết bị đo phóng xạ đa năng dải rộng SVG-2M</h2>
+            <br />
+        </div>
+        <div>
+            <img id="logo-bchh" src="/images/logo-bchh-removebg.png" />
+        </div>
+    </div>
+
+    <div class="wrap">
+
+        <div class="content-wrap">
+            <div class="list-seri">
+                <div class="title">
+                    Danh sách thiết bị
+
+                    <div class="tools-wrap">
+                        <!-- style="display: none;" -->
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="btn-show-action-pane">
+                            <i class="fa-solid fa-bars fa-2xl" style="color: #000000;"></i>
+                        </button>
+
+                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                            aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h5 id="offcanvasRightLabel">Công cụ hỗ trợ</h5>
+                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                            data-bs-target="#home" type="button" role="tab" aria-controls="home"
+                                            aria-selected="true">Thông tin</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="access-tab" data-bs-toggle="tab"
+                                            data-bs-target="#access" type="button" role="tab" aria-controls="access"
+                                            aria-selected="false">Liên hệ</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="home" role="tabpanel"
+                                        aria-labelledby="home-tab">
+                                        <span>Tài khoản: </span> <span id="tab-pane-taikhoan"></span>
+                                        <br>
+                                        <span>Vai trò: </span> <span id="tab-pane-vaitro"></span>
+                                        <br>
+                                        <span>Đơn vị: </span> <span id="tab-pane-donvi"></span>
+                                        <br>
+                                        <span>Số điện thoại: </span> <span id="tab-pane-sdt"></span>
+                                        <br>
+                                        <hr>
+                                        <div id="tabpane-delete-account-container">
+
+                                            <h6>Quản lý</h6>
+                                            <p>Quản lý tài khoản và seri.</p>
+                                            <button type="button" class="btn btn-info" id="btn-delete-account"
+                                                onclick="window.location.href='/management'">Quản lý</button>
+                                        </div>
+                                        <hr>
+                                        <div id="tabpane-logout-container">
+                                            <h6>Biểu đồ dữ liệu</h6>
+                                            <p>Xem trạng dữ liệu chi tiết tại từng thiết bị.</p>
+                                            <button type="button" class="btn btn-danger" id="btn-logout-account"
+                                                onclick="window.location.href='/'">
+                                                Xem biểu đồ
+                                            </button>
+                                        </div>
+                                        <hr>
+                                        <div id="tabpane-logout-container">
+                                            <h6>Đăng xuất</h6>
+                                            <p>Đăng xuất khỏi thiết bị hiện tại.</p>
+                                            <button type="button" class="btn btn-danger" id="btn-logout-account"
+                                                onclick="logout()">
+                                                Đăng xuất
+                                            </button>
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="tab-pane fade" id="access" role="tabpanel" aria-labelledby="access-tab">
+                                        <div>Xin vui lòng liên hệ:</div>
+                                        <br />
+                                        <div class="dialog-address">
+                                            <div>Phòng Gia tốc và Điện tử Hạt nhân</div>
+                                            <div>Trung tâm chiếu xạ Hà Nội</div>
+                                            <div>Viện Năng Lượng Nguyên Tử Việt Nam</div>
+                                        </div>
+                                        <br />
+                                        <div style="display: inline-block;">
+                                            <span>Số điện thoại:</span>
+                                            <span style="margin-left: 30px;">0835665062</span>
+                                        </div>
+                                        <div style="display: inline-block;">
+                                            <span>Email:</span>
+                                            <span style="margin-left: 86px;">hungxom933@gmail.com</span>
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="list-seri-data">
+                    <ul id="list-series">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="describe-wrap">
+                <div class="describe">
+                    <div class="title">Mô tả</div>
+                    <div class="location-icon">
+                        <i class="fa-solid fa-location-dot fa-2xl" style="color: #00b81f;"></i>
+                        Đang hoạt động
+                        <div class="split"></div>
+                        <i class="fa-solid fa-location-dot fa-2xl" style="color: #ff5442;"></i>
+                        Chưa hoạt động
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="date-time">
+                <div id="datetime"></div>
+            </div>
+        </div>
+
+        <div class="map-data">
+            <!-- Map container -->
+            <div id="map-container">
+                <div id="map">
+                </div>
+            </div>
+
+
+            <!-- prettier-ignore -->
+            <script>
+                (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })({
+                    key: "<%=MAP_API_KEY%>",
+                    v: "<%=MAP_API_V%>",
+                });
+            </script>
+        </div>
+
+    </div>
+    <script src="/pages/map-series/js/series.js"></script>
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>

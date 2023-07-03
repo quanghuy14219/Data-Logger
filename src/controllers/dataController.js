@@ -171,6 +171,56 @@ const getAllSeries = async (req, res) => {
   });
 };
 
+const getNewestRecords = async (req, res) => {
+  const query = req.query || {};
+  let { id } = query;
+  if (!id) {
+    return res.status(400).json({
+      err: "Missing id",
+    });
+  }
+
+  const user = await userService.findById(id);
+  if (!user) {
+    return res.status(404).json({
+      err: `No user with id ${id} found`,
+    });
+  }
+
+  let series = null;
+  if (user.role === "USER") {
+    series = await dataService.queryUserSeries(user.series);
+  } else {
+    series = await dataService.querySeries({});
+  }
+
+  if (!series) {
+    return req.status(500).json({
+      err: "Internal server error",
+    });
+  }
+
+  series = series.map((s) => s.seriStr);
+  const records = await dataService.getNewestRecords(series);
+  if (!records) {
+    return req.status(500).json({
+      err: "Internal server error",
+    });
+  }
+
+  const convertRecords = records.map((record) => {
+    const svg2m = record.latestRecord;
+    svg2m.time = new Date(svg2m.time);
+    const dateTime = parseData(svg2m);
+    return {
+      ...svg2m,
+      ...dateTime,
+    };
+  });
+
+  return res.status(200).json(convertRecords);
+};
+
 module.exports = {
   addData,
   getDataByQuery,
@@ -178,4 +228,5 @@ module.exports = {
   querySeries,
   changeSeriInfo,
   getAllSeries,
+  getNewestRecords,
 };

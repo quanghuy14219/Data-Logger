@@ -19,9 +19,11 @@ const initWebRouters = (app) => {
   router.get("/", viewController.viewSvg2mPage);
   router.get("/login", viewController.loginPage);
   router.get("/management", viewController.userPage);
+  router.get("/series", viewController.mapSeriesPage);
 
   router.get("/api/svg2m", dataMiddleware.parseQuery, dataController.getData);
   router.get("/api/svg2m/series", dataController.querySeries);
+  router.get("/api/svg2m/records", dataController.getNewestRecords);
 
   // user
   router.post("/api/user/login", userController.login);

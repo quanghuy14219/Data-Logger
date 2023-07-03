@@ -37,9 +37,17 @@ const userPage = (req, res) => {
   return res.render("user-management.ejs");
 };
 
+const mapSeriesPage = (req, res) => {
+  return res.render("map-series.ejs", {
+    MAP_API_KEY: process.env.MAP_API_KEY,
+    MAP_API_V: process.env.MAP_API_V,
+  });
+};
+
 module.exports = {
   viewSVG2M,
   viewSvg2mPage,
   loginPage,
   userPage,
+  mapSeriesPage,
 };

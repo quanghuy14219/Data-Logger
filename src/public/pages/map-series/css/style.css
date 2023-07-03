@@ -1,0 +1,296 @@
+body {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.wrap {
+    display: flex;
+    /* background-color: antiquewhite; */
+    height: 615px;
+}
+
+.content-wrap {
+    margin: 5px;
+    margin-right: 0px;
+    width: 20%;
+    overflow: auto;
+    display: block;
+}
+
+.list-seri {
+    width: 100%;
+    height: 70%;
+    overflow: auto;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.describe-wrap {
+    padding: 5px 0px;
+    width: 100%;
+    height: 20%;
+    overflow: auto;
+}
+
+.describe {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.date-time {
+    width: 100%;
+    height: 10%;
+    overflow: auto;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.map-data {
+    margin: 5px;
+    width: 80%;
+    overflow: auto;
+}
+
+#map-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 5px;
+    border: 1px solid rgb(0, 0, 0);
+    margin: auto;
+}
+
+h2 {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    text-align: center;
+    font-size: 30px;
+    margin: 10px;
+}
+
+#about {
+    display: flex;
+    justify-content: center;
+    background: url("/images/trongdong.jpg") center no-repeat;
+    background-size: 100% auto;
+    background-color: #ed3237;
+}
+
+#quochuy {
+    height: 100px;
+    margin: 10px 20px;
+}
+
+#logo-bchh {
+    height: 100px;
+    margin: 10px 20px;
+}
+
+#about-content {
+    padding-top: 10px;
+}
+
+.w3-center.w3-hide-small h2 {
+    color: #fff212;
+    text-transform: uppercase;
+    font-size: 27px;
+}
+
+#about-content h2 {
+    font-weight: 900;
+}
+
+div[style="background-color: white; font-weight: 500; font-family: Roboto, sans-serif; padding: 15px 25px; box-sizing: border-box; top: 5px; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 5px; left: 50%; max-width: 375px; position: absolute; transform: translateX(-50%); width: calc(100% - 10px); z-index: 1;"] {
+    display: none;
+}
+
+
+.content-wrap {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.list-seri,
+.date-time,
+.describe {
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.list-seri-data ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-seri-data li {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+.list-seri-data li:last-child {
+    border-bottom: none;
+}
+
+.location-icon {
+    display: flex;
+    justify-content: space-between;
+    /* padding: 5px; */
+}
+
+.fa-location-dot {
+    margin-right: 5px;
+}
+
+#datetime {
+    text-align: center;
+    /* padding: 10px; */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.list-seri>div,
+.describe>div {
+    /* margin-bottom: 10px; */
+    padding: 10px;
+}
+
+.date-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#datetime {
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: auto;
+}
+
+.describe {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center;
+    text-align: center; */
+}
+
+.location-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.fa-location-dot {
+    margin: 0px 5px;
+}
+
+.describe .title {
+    margin: 0px;
+    padding-bottom: 0px;
+}
+
+.split {
+    margin: 0px 5px;
+}
+
+#list-series li {
+    cursor: pointer;
+}
+
+body {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+/* input[type="text"] {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    max-width: 70px;
+} */
+
+/* Search */
+
+.tools-wrap h5 {
+    margin: 20px 0px 10px 0;
+    padding: 0;
+}
+
+#download-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#download-body input {
+    margin: 0 10px;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#download-container {
+    display: flex;
+    align-items: center;
+}
+
+button#btn-show-action-pane {
+    color: black;
+}
+
+button#btn-show-action-pane {
+    background-color: white;
+    border: 0px;
+}
+
+#myTabContent {
+    padding: 20px;
+}
+
+button.btn-info,
+button.btn-danger {
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+#download-body span {
+    margin-bottom: 10px;
+}
+
+#myTab button {
+    margin: 0px;
+}
+
+#profile input {
+    margin: 10px 10px;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tools-wrap {
+    display: flex;
+    justify-content: flex-end;
+
+    font-size: 16px;
+    font-weight: 400;
+}

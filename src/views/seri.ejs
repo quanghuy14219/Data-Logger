@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-    <title>Trang chủ</title>
+    <title>Biểu đồ dữ liệu SVG-2M</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -80,19 +80,6 @@
 </head>
 
 <body>
-    <!-- <header style="position: sticky; top: 0; z-index: 11;">
-        <div class="logo">
-            <img src="\images\logo.png" alt="SVG-2M" />
-        </div>
-        
-        <nav>
-            <ul>
-                <li><a href="/">Bảng dữ liệu</a></li>
-                <li><a href="/management">Quản lý</a></li>
-                <li><a onclick="logout()">Đăng xuất</a></li>
-            </ul>
-        </nav>
-    </header> -->
     <div class="w3-row w3-padding-137" id="about">
         <div>
             <img id="quochuy" src="/images/quochuy.svg" />
@@ -123,6 +110,7 @@
             </span>
             <!-- <i class="fa-solid fa-caret-down"></i> -->
         </h2>
+
         <div id="download-container">
 
 
@@ -166,6 +154,23 @@
                             <span>Số điện thoại: </span> <span id="tab-pane-sdt"></span>
                             <br>
                             <hr>
+                            <div id="tabpane-delete-account-container">
+
+                                <h6>Quản lý</h6>
+                                <p>Quản lý tài khoản và seri.</p>
+                                <button type="button" class="btn btn-info" id="btn-delete-account"
+                                    onclick="window.location.href='/management'">Quản lý</button>
+                            </div>
+                            <hr>
+                            <div id="tabpane-logout-container">
+                                <h6>Bản đồ hoạt động</h6>
+                                <p>Xem trạng thái hoạt động của các thiết bị trên bản đồ.</p>
+                                <button type="button" class="btn btn-danger" id="btn-logout-account"
+                                    onclick="window.location.href='/series'">
+                                    Xem bản đồ
+                                </button>
+                            </div>
+                            <hr>
                             <div id="tabpane-logout-container">
                                 <h6>Đăng xuất</h6>
                                 <p>Đăng xuất khỏi thiết bị hiện tại.</p>
@@ -173,13 +178,9 @@
                                     Đăng xuất
                                 </button>
                             </div>
-                            <div id="tabpane-delete-account-container">
-                                <hr>
-                                <h6>Quản lý</h6>
-                                <p>Quản lý tài khoản và seri.</p>
-                                <button type="button" class="btn btn-info" id="btn-delete-account"
-                                    onclick="window.location.href='/management'">Quản lý</button>
-                            </div>
+
+
+
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div id="download-body">

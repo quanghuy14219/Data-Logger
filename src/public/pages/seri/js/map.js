@@ -69,21 +69,20 @@ function getContent(svg2mData) {
 
   let info = ` 
     <div class="marker">
-      <h4 class="marker-header">Thiết bị mã số ${seri}</h4>
+      <h4 class="marker-header">ID: ${seri}</h4>
       <div class="marker-content">
         <ul>
           <li class="marker-time">Thời điểm: ${time} ${date}</li>
           <li class="marker-draDoseRate">DRA Dose Rate: ${draDoseRate} (µSv/h)</li>
           <li class="marker-draDose">DRA Dose: ${draDose} (µSv)</li>
-          ${
-            mode === 1
-              ? ` 
+          ${mode === 1
+      ? ` 
             <li class="marker-actAlpha">Act Alpha: ${actAlpha} (CPS)</li>
             <li class="marker-actBeta">Act Beta: ${actBeta} (CPS)</li>
             <li class="marker-actGamma">Act Gamma: ${actGamma} (µSv/h)</li>
             `
-              : ""
-          } 
+      : ""
+    } 
           
         </ul>
       </div>

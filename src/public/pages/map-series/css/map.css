@@ -1,0 +1,31 @@
+/* #map-container {
+  width: 500px;
+  height: 500px;
+} */
+
+#map-container {
+  width: 100%;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+.marker .marker-content ul {
+  padding-left: 5px;
+}
+
+.marker .marker-content ul li {
+  list-style: none;
+}
+
+.marker-info-red,
+.marker-control-red {
+  color: red;
+}
+
+.marker-info-green,
+.marker-control-green {
+  color: green;
+}

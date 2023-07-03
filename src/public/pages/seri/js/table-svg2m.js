@@ -133,7 +133,6 @@ const loadData = async (seri, limit = 200) => {
     const values = await axios
       .get("/api/svg2m/series", {
         params: {
-          limit: 5,
           id: user._id,
         },
       })
@@ -143,14 +142,33 @@ const loadData = async (seri, limit = 200) => {
       .catch(function (error) {
         console.log(error);
       });
+    const statusCol = document.getElementById("col-status");
     if (!values || values.length === 0) {
-      const statusCol = document.getElementById("col-status");
       if (statusCol) {
         statusCol.textContent =
           "Bạn hiện chưa được cấp quyền truy cập vào bất cứ seri nào. Vui lòng liên hệ Admin để thêm các quyền truy cập";
       }
     } else {
-      currentSeri = values[0].seri;
+      const urlParams = new URLSearchParams(window.location.search);
+      const seriUrl = urlParams.get("s");
+      if (seriUrl) {
+        const seriParam = parseInt(seriUrl);
+        const series = values.map((s) => s.seri);
+        if (!series.includes(seriParam)) {
+          statusCol.textContent = `Bạn hiện chưa được cấp quyền truy cập vào seri ${seriParam}. Vui lòng liên hệ Admin để thêm quyền truy cập`;
+          return;
+        } else {
+          currentSeri = seriParam;
+          history.replaceState(
+            {},
+            null,
+            `${window.location.origin}${window.location.pathname}`
+          );
+        }
+      } else {
+        currentSeri = values[0].seri;
+      }
+
       const spanSeri = document.getElementById("current-seri");
       if (spanSeri) {
         spanSeri.textContent = `${currentSeri}`;
