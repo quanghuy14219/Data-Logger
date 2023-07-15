@@ -298,3 +298,7 @@ button.btn-danger {
     font-size: 16px;
     font-weight: 400;
 }
+
+.marker-content {
+    font-weight: 400;
+}
