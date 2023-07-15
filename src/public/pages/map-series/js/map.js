@@ -109,11 +109,14 @@ async function updateMarker(svg2m) {
       infoWindow.setContent(getContent(svg2m, true));
 
       const markerControlElement = marker.getControlElement();
+      console.log("Call control: ", svg2m.seriStr);
       if (markerControlElement) {
         markerControlElement.classList.replace(
           "marker-control-red",
           "marker-control-green"
         );
+      } else {
+        console.log("Missing control: ", svg2m.seriStr);
       }
       infoWindow.open(map, marker);
 
@@ -247,6 +250,126 @@ window.addEventListener("seri-clicked", (event) => {
   map.setCenter({ lat: svg2m.latitude, lng: svg2m.longitude });
   infoWindow.open(map, marker);
   map.setZoom(13);
+});
+
+function getUser() {
+  const auth = localStorage.getItem("auth");
+  if (!auth) {
+    return null;
+  }
+  try {
+    const user = JSON.parse(auth);
+    return user;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function fetchRecords(user) {
+  const records = await axios
+    .get("/api/svg2m/records", {
+      params: {
+        id: user._id,
+      },
+    })
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  return records;
+}
+
+window.addEventListener("new-seri", async (event) => {
+  const seriStr = event?.detail?.seri.seriStr;
+  if (!seriStr) return;
+
+  const { user, token } = getUser();
+  if (user?.role !== "ADMIN") return;
+
+  if (!user) {
+    logout();
+  }
+  const records = await fetchRecords(user);
+  if (!records) return;
+
+  const newRecord = records.find((record) => record.seriStr === seriStr);
+
+  if (!_Map_.ref) {
+    await initMap();
+  }
+
+  if (newRecord) {
+    const seriesContainer = document.getElementById("list-series");
+    const li = document.createElement("li");
+    li.id = `marker-control-${newRecord.seriStr}`;
+    li.classList.add("marker-control-red");
+    seriesContainer.appendChild(li);
+
+    // Fake event window load to force reload series control
+
+    window.dispatchEvent(new Event("reload-controls"));
+
+    updateMarker(newRecord);
+  }
+});
+
+window.addEventListener("change-series", async (event) => {
+  const { user, token } = getUser();
+  if (user?.role === "ADMIN") return;
+
+  if (!user) {
+    logout();
+  }
+
+  const records = await fetchRecords(user);
+  if (!records) return;
+
+  if (!_Map_.ref) {
+    await initMap();
+  }
+  const { ref: map, markers } = _Map_;
+
+  const currentSeries = Object.keys(markers);
+  const updatedSeries = records.map((record) => record.seriStr);
+  const newSeries = updatedSeries.filter(
+    (seriStr) => !currentSeries.includes(seriStr)
+  );
+
+  const deletedSeries = currentSeries.filter(
+    (seriStr) => !updatedSeries.includes(seriStr)
+  );
+
+  const newRecords = records.filter((record) =>
+    newSeries.includes(record.seriStr)
+  );
+
+  // Add new markers
+  if (newSeries.length > 0) {
+    // Fake event window load to force reload series control
+    window.dispatchEvent(new Event("reload-controls"));
+    newRecords.forEach((record) => updateMarker(record));
+  }
+
+  // delete markers
+  deletedSeries.forEach((seriStr) => {
+    const marker = markers[seriStr];
+    if (marker) {
+      marker.setMap(null);
+      if (marker.timeOut) {
+        clearTimeout(marker.timeOut);
+      }
+      document.getElementById(`marker-control-${seriStr}`)?.remove();
+    }
+  });
+
+  // console.log(newSeries);
+  // console.log(deletedSeries);
+  // console.log(newRecords);
+
+  // records.forEach((record) => {});
+  // console.log(records);
 });
 
 // For testing

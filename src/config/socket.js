@@ -153,9 +153,11 @@ export const dispatchChangeSeriInfoEvent = (seri) => {
 };
 
 export const dispatchChangeSeriesEvent = (account) => {
+  const accountId = account._id.toString();
   Object.values(socketIORef.clients).forEach((socket) => {
     const role = socket?.auth?.role;
-    if (role && role === "ADMIN") {
+    const _id = socket?.auth?._id;
+    if (role && _id && (role === "ADMIN" || _id === accountId)) {
       socket.emit("change-series", {
         account: account,
       });

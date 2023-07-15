@@ -11,13 +11,30 @@ socket.on("hello", function (data) {
       console.log("Authenticated");
       token && socket.emit("authorization", token);
     }
-  } catch (error) { }
+  } catch (error) {}
 });
 
 socket.on("new-data", function (svg2m) {
   window.dispatchEvent(
     new CustomEvent("new-svg2m-data", {
       detail: svg2m,
+    })
+  );
+});
+
+socket.on("new-seri", function (seri) {
+  window.dispatchEvent(
+    new CustomEvent("new-seri", {
+      detail: seri,
+    })
+  );
+  console.log(seri);
+});
+
+socket.on("change-series", function (account) {
+  window.dispatchEvent(
+    new CustomEvent("change-series", {
+      detail: account,
     })
   );
 });
@@ -42,10 +59,16 @@ function displayDateTime() {
 
   // Lấy thông tin ngày và giờ theo định dạng mong muốn
   var date = gmt7.toISOString().slice(0, 10);
-  var time = gmt7.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
+  var time = gmt7.toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
 
   // Hiển thị ngày và giờ trên trang web
-  document.getElementById('datetime').textContent = time + ' ' + date + ' GMT+7';
+  document.getElementById("datetime").textContent =
+    time + " " + date + " GMT+7";
 }
 
 // Cập nhật thời gian mỗi giây
