@@ -7,7 +7,7 @@ const _Map_ = {
   markers: {},
 };
 
-const MAX_TIME_LEFT = 60000;
+const MAX_TIME_LEFT = 60 * 1000;
 
 async function initMap() {
   const { Map } = await google.maps.importLibrary("maps");
@@ -35,26 +35,29 @@ function getContent(svg2mData, active = false) {
   } = svg2mData;
 
   let info = ` 
-    <div class="marker marker-info-${active ? "green" : "red"
+    <div class="marker marker-info-${
+      active ? "green" : "red"
     }" id="marker-info-${seri}">
       <h4 class="marker-header">ID: ${seri}</h4>
       <div class="marker-content">
         <ul>
           <li class="marker-time">Time: ${time} ${date}</li>
           <li class="marker-draDoseRate">DRA Dose Rate: ${draDoseRate} (µSv/h)</li>
-          ${mode === 1
-      ? ` 
+          ${
+            mode === 1
+              ? ` 
             <li class="marker-actAlpha">Act Alpha: ${actAlpha} (CPS)</li>
             <li class="marker-actBeta">Act Beta: ${actBeta} (CPS)</li>
             <li class="marker-actGamma">Act Gamma: ${actGamma} (µSv/h)</li>
             `
-      : ""
-    } 
+              : ""
+          } 
           
         </ul>
       </div>
-      <a class="marker-detail" href="${window.location.origin
-    }/seri-data?s=${seri}">Đến trang xem dữ liệu</a>
+      <a class="marker-detail" href="${
+        window.location.origin
+      }/seri-data?s=${seri}">Đến trang xem dữ liệu</a>
     </div>
   `;
 
@@ -91,9 +94,10 @@ async function updateMarker(svg2m) {
 
     const infoWindow = new google.maps.InfoWindow({
       content: content,
+      disableAutoPan: true,
     });
     // open by default
-    infoWindow.open(map, marker);
+
     marker.infoWindow = infoWindow;
     marker.addListener("click", function () {
       infoWindow.open(map, marker);
@@ -114,12 +118,14 @@ async function updateMarker(svg2m) {
           "marker-control-green"
         );
       }
+      infoWindow.open(map, marker);
 
       marker.timeOut = setTimeout(() => {
         marker.timeOut = null;
         marker.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
 
         infoWindow.setContent(getContent(svg2m, false));
+        infoWindow.close(map, marker);
 
         if (markerControlElement) {
           markerControlElement.classList.replace(
@@ -150,6 +156,7 @@ async function updateMarker(svg2m) {
       console.log("TimeLeft", timeLeft);
       if (timeLeft >= 0 && timeLeft < MAX_TIME_LEFT) {
         infoWindow.setContent(getContent(svg2m, true));
+        infoWindow.open(map, marker);
 
         const markerControlElement = marker.getControlElement();
         if (markerControlElement) {
@@ -169,6 +176,7 @@ async function updateMarker(svg2m) {
             "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
           );
           infoWindow.setContent(getContent(svg2m, false));
+          infoWindow.close(map, marker);
 
           if (markerControlElement) {
             markerControlElement.classList.replace(
@@ -225,27 +233,12 @@ window.addEventListener("update-markers", async (event) => {
     await initMap();
   }
 
-  // records[0] = {
-  //   ...records[0],
-  //   time: "21:03:00",
-  //   date: "30/06/2023",
-  // };
-
   records.forEach((record) => {
     const mR = {
       ...record,
-      date: record.date.replace("2024", "2023"),
     };
     updateMarker(mR);
   });
-
-  // const mR = {
-  //   ...records[0],
-  //   time: "20:45:00",
-  //   date: "30/06/2023",
-  // };
-  // console.log(mR);
-  // updateMarker(mR);
 });
 
 window.addEventListener("seri-clicked", (event) => {
@@ -259,71 +252,70 @@ window.addEventListener("seri-clicked", (event) => {
   map.setZoom(13);
 });
 
+// For testing
 
-// // For testing
+const randInt = (a, b) => {
+  const range = b - a + 1;
+  const random = Math.floor(Math.random() * range);
+  return a + random;
+};
 
-// const randInt = (a, b) => {
-//   const range = b - a + 1;
-//   const random = Math.floor(Math.random() * range);
-//   return a + random;
-// };
+const randomFloat = () => {
+  // Generate a random number between 0 and 100 (exclusive)
+  const random = Math.random();
 
-// const randomFloat = () => {
-//   // Generate a random number between 0 and 100 (exclusive)
-//   const random = Math.random();
+  // Limit the number to two decimal places
+  const rounded = Math.floor(random * 100) / 100;
 
-//   // Limit the number to two decimal places
-//   const rounded = Math.floor(random * 100) / 100;
+  return rounded;
+};
 
-//   return rounded;
-// };
+const parseData = (data) => {
+  const day = data.time.getDate().toString().padStart(2, "0");
+  const month = (data.time.getMonth() + 1).toString().padStart(2, "0");
+  const year = data.time.getFullYear().toString();
+  const dateStr = `${day}/${month}/${year}`;
 
-// const parseData = (data) => {
-//   const day = data.time.getDate().toString().padStart(2, "0");
-//   const month = (data.time.getMonth() + 1).toString().padStart(2, "0");
-//   const year = data.time.getFullYear().toString();
-//   const dateStr = `${day}/${month}/${year}`;
+  const hours = data.time.getHours().toString().padStart(2, "0");
+  const minutes = data.time.getMinutes().toString().padStart(2, "0");
+  const seconds = data.time.getSeconds().toString().padStart(2, "0");
 
-//   const hours = data.time.getHours().toString().padStart(2, "0");
-//   const minutes = data.time.getMinutes().toString().padStart(2, "0");
-//   const seconds = data.time.getSeconds().toString().padStart(2, "0");
+  const timeStr = `${hours}:${minutes}:${seconds}`;
 
-//   const timeStr = `${hours}:${minutes}:${seconds}`;
+  const convert = {
+    ...data,
+    date: dateStr,
+    time: timeStr,
+  };
+  return convert;
+};
 
-//   const convert = {
-//     ...data,
-//     date: dateStr,
-//     time: timeStr,
-//   };
-//   return convert;
-// };
+window.sampleSvg2mData = (seri) => {
+  const oldData = _Map_.markers[seri.toString()]?.data;
+  let longitude = oldData?.longitude;
+  let latitude = oldData?.latitude;
+  const time = new Date();
+  return parseData({
+    time: time,
+    seri: seri,
+    seriStr: seri.toString(),
+    longitude: longitude || randInt(1, 179),
+    latitude: latitude || randInt(1, 90),
+    mode: randInt(0, 1),
+    draDoseRate: randomFloat(),
+    draDose: randomFloat(),
+    neutron: randomFloat(),
+    actAlpha: randomFloat(),
+    actBeta: randomFloat(),
+    actGamma: randomFloat(),
+    createAt: time,
+  });
+};
 
-// window.sampleSvg2mData = (seri) => {
-//   const oldData = _Map_.markers[seri.toString()]?.data;
-//   let longitude = oldData?.longitude;
-//   let latitude = oldData?.latitude;
-//   const time = new Date();
-//   return parseData({
-//     time: time,
-//     seri: seri,
-//     seriStr: seri.toString(),
-//     longitude: longitude || randInt(1, 179),
-//     latitude: latitude || randInt(1, 90),
-//     mode: randInt(0, 1),
-//     draDoseRate: randomFloat(),
-//     draDose: randomFloat(),
-//     neutron: randomFloat(),
-//     actAlpha: randomFloat(),
-//     actBeta: randomFloat(),
-//     actGamma: randomFloat(),
-//     createAt: time,
-//   });
-// };
-
-// window.fakeSocketData = (svg2m) => {
-//   window.dispatchEvent(
-//     new CustomEvent("new-svg2m-data", {
-//       detail: svg2m,
-//     })
-//   );
-// };
+window.fakeSocketData = (svg2m) => {
+  window.dispatchEvent(
+    new CustomEvent("new-svg2m-data", {
+      detail: svg2m,
+    })
+  );
+};

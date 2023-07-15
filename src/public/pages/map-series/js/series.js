@@ -1,3 +1,16 @@
+function getUser() {
+  const auth = localStorage.getItem("auth");
+  if (!auth) {
+    return null;
+  }
+  try {
+    const user = JSON.parse(auth);
+    return user;
+  } catch (error) {
+    return null;
+  }
+}
+
 function renderSeries(series) {
   const seriesContainer = document.getElementById("list-series");
   seriesContainer &&
@@ -18,8 +31,8 @@ function renderSeries(series) {
     });
 }
 
-window.addEventListener("authentication complete", async (event) => {
-  const { user, token } = event.detail;
+window.addEventListener("load", async (event) => {
+  const { user, token } = getUser();
   if (!token) {
     logout();
   }
@@ -39,7 +52,7 @@ window.addEventListener("authentication complete", async (event) => {
 });
 
 window.addEventListener("authentication complete", async (event) => {
-  const { user, token } = event.detail;
+  const { user, token } = getUser();
   if (!token) {
     logout();
   }

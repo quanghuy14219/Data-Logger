@@ -154,16 +154,22 @@ const loadData = async (seri, limit = 200) => {
       if (seriUrl) {
         const seriParam = parseInt(seriUrl);
         const series = values.map((s) => s.seri);
+
+        const spanSeri = document.getElementById("current-seri");
+        if (spanSeri) {
+          spanSeri.textContent = `${seriParam}`;
+        }
+        history.replaceState(
+          {},
+          null,
+          `${window.location.origin}${window.location.pathname}`
+        );
+
         if (!series.includes(seriParam)) {
           statusCol.textContent = `Bạn hiện chưa được cấp quyền truy cập vào seri ${seriParam}. Vui lòng liên hệ Admin để thêm quyền truy cập`;
           return;
         } else {
           currentSeri = seriParam;
-          history.replaceState(
-            {},
-            null,
-            `${window.location.origin}${window.location.pathname}`
-          );
         }
       } else {
         currentSeri = values[0].seri;
