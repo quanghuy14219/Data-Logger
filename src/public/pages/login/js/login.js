@@ -56,7 +56,7 @@ const login = async () => {
               window.location.assign(`${window.location.origin}/management`);
               break;
             case "USER":
-              window.location.assign(`${window.location.origin}`);
+              window.location.assign(`${window.location.origin}/series`);
               break;
           }
         }
@@ -92,7 +92,7 @@ const login = async () => {
               window.location.assign(`${window.location.origin}/management`);
               break;
             case "USER":
-              window.location.assign(`${window.location.origin}`);
+              window.location.assign(`${window.location.origin}/series`);
               break;
           }
         }

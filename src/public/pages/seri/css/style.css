@@ -7,6 +7,7 @@ body {
     display: flex;
     /* background-color: antiquewhite; */
     height: 560px;
+    height: 80vh;
 }
 
 .table-data {
@@ -149,26 +150,33 @@ button {
     background: url("/images/trongdong.jpg") center no-repeat;
     background-size: 100% auto;
     background-color: #ed3237;
+    height: 13vh;
 }
 
 #quochuy {
-    height: 100px;
-    margin: 10px 20px;
+    height: 97%;
+    margin: 3% 10px;
+    padding: 5px;
 }
 
 #logo-bchh {
-    height: 100px;
-    margin: 10px 20px;
+    height: 97%;
+    margin: 3% 10px;
+    padding: 5px;
 }
 
-#about-content {
-    padding-top: 10px;
-}
+/* #about-content {
+    padding-top: 3%;
+} */
 
 .w3-center.w3-hide-small h2 {
     color: #fff212;
     text-transform: uppercase;
-    font-size: 27px;
+    font-size: 3vh;
+}
+
+#about-content {
+    padding-top: 0.7vh;
 }
 
 .current-seri-container {
@@ -181,6 +189,7 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 6vh;
 }
 
 .current-seri-container,

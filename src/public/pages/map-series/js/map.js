@@ -40,9 +40,8 @@ function getContent(svg2mData, active = false) {
       <h4 class="marker-header">ID: ${seri}</h4>
       <div class="marker-content">
         <ul>
-          <li class="marker-time">Thời điểm: ${time} ${date}</li>
+          <li class="marker-time">Time: ${time} ${date}</li>
           <li class="marker-draDoseRate">DRA Dose Rate: ${draDoseRate} (µSv/h)</li>
-          <li class="marker-draDose">DRA Dose: ${draDose} (µSv)</li>
           ${mode === 1
       ? ` 
             <li class="marker-actAlpha">Act Alpha: ${actAlpha} (CPS)</li>
@@ -55,7 +54,7 @@ function getContent(svg2mData, active = false) {
         </ul>
       </div>
       <a class="marker-detail" href="${window.location.origin
-    }?s=${seri}">Đến trang xem dữ liệu</a>
+    }/seri-data?s=${seri}">Đến trang xem dữ liệu</a>
     </div>
   `;
 
@@ -214,7 +213,7 @@ function deleteMarker(seri) {
 window.addEventListener("new-svg2m-data", async (event) => {
   const svg2m = event.detail;
   const { seriStr } = svg2m;
-  const marker = markers[seriStr];
+  const marker = _Map_.markers[seriStr];
   if (marker) {
     updateMarker(svg2m);
   }
@@ -257,5 +256,74 @@ window.addEventListener("seri-clicked", (event) => {
   const svg2m = marker.data;
   map.setCenter({ lat: svg2m.latitude, lng: svg2m.longitude });
   infoWindow.open(map, marker);
-  map.setZoom(8.0);
+  map.setZoom(13);
 });
+
+
+// // For testing
+
+// const randInt = (a, b) => {
+//   const range = b - a + 1;
+//   const random = Math.floor(Math.random() * range);
+//   return a + random;
+// };
+
+// const randomFloat = () => {
+//   // Generate a random number between 0 and 100 (exclusive)
+//   const random = Math.random();
+
+//   // Limit the number to two decimal places
+//   const rounded = Math.floor(random * 100) / 100;
+
+//   return rounded;
+// };
+
+// const parseData = (data) => {
+//   const day = data.time.getDate().toString().padStart(2, "0");
+//   const month = (data.time.getMonth() + 1).toString().padStart(2, "0");
+//   const year = data.time.getFullYear().toString();
+//   const dateStr = `${day}/${month}/${year}`;
+
+//   const hours = data.time.getHours().toString().padStart(2, "0");
+//   const minutes = data.time.getMinutes().toString().padStart(2, "0");
+//   const seconds = data.time.getSeconds().toString().padStart(2, "0");
+
+//   const timeStr = `${hours}:${minutes}:${seconds}`;
+
+//   const convert = {
+//     ...data,
+//     date: dateStr,
+//     time: timeStr,
+//   };
+//   return convert;
+// };
+
+// window.sampleSvg2mData = (seri) => {
+//   const oldData = _Map_.markers[seri.toString()]?.data;
+//   let longitude = oldData?.longitude;
+//   let latitude = oldData?.latitude;
+//   const time = new Date();
+//   return parseData({
+//     time: time,
+//     seri: seri,
+//     seriStr: seri.toString(),
+//     longitude: longitude || randInt(1, 179),
+//     latitude: latitude || randInt(1, 90),
+//     mode: randInt(0, 1),
+//     draDoseRate: randomFloat(),
+//     draDose: randomFloat(),
+//     neutron: randomFloat(),
+//     actAlpha: randomFloat(),
+//     actBeta: randomFloat(),
+//     actGamma: randomFloat(),
+//     createAt: time,
+//   });
+// };
+
+// window.fakeSocketData = (svg2m) => {
+//   window.dispatchEvent(
+//     new CustomEvent("new-svg2m-data", {
+//       detail: svg2m,
+//     })
+//   );
+// };
