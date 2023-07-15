@@ -35,29 +35,26 @@ function getContent(svg2mData, active = false) {
   } = svg2mData;
 
   let info = ` 
-    <div class="marker marker-info-${
-      active ? "green" : "red"
+    <div class="marker marker-info-${active ? "green" : "red"
     }" id="marker-info-${seri}">
       <h4 class="marker-header">ID: ${seri}</h4>
       <div class="marker-content">
         <ul>
           <li class="marker-time">Time: ${time} ${date}</li>
           <li class="marker-draDoseRate">DRA Dose Rate: ${draDoseRate} (µSv/h)</li>
-          ${
-            mode === 1
-              ? ` 
+          ${mode === 1
+      ? ` 
             <li class="marker-actAlpha">Act Alpha: ${actAlpha} (CPS)</li>
             <li class="marker-actBeta">Act Beta: ${actBeta} (CPS)</li>
             <li class="marker-actGamma">Act Gamma: ${actGamma} (µSv/h)</li>
             `
-              : ""
-          } 
+      : ""
+    } 
           
         </ul>
       </div>
-      <a class="marker-detail" href="${
-        window.location.origin
-      }/seri-data?s=${seri}">Đến trang xem dữ liệu</a>
+      <a class="marker-detail" href="${window.location.origin
+    }/seri-data?s=${seri}">Đến trang xem dữ liệu</a>
     </div>
   `;
 
@@ -106,7 +103,7 @@ async function updateMarker(svg2m) {
 
     const newDate = toDate(svg2m.time, svg2m.date);
     const timeLeft = Date.now() - newDate.getTime();
-    if (timeLeft >= 0 && timeLeft < MAX_TIME_LEFT) {
+    if (timeLeft < MAX_TIME_LEFT) {
       marker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
 
       infoWindow.setContent(getContent(svg2m, true));
@@ -154,7 +151,7 @@ async function updateMarker(svg2m) {
 
       const timeLeft = Date.now() - newDate.getTime();
       console.log("TimeLeft", timeLeft);
-      if (timeLeft >= 0 && timeLeft < MAX_TIME_LEFT) {
+      if (timeLeft < MAX_TIME_LEFT) {
         infoWindow.setContent(getContent(svg2m, true));
         infoWindow.open(map, marker);
 
