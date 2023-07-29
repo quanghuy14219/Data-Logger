@@ -7,7 +7,7 @@ body {
     display: flex;
     /* background-color: antiquewhite; */
     height: 615px;
-    height: 87vh;
+    height: 83vh;
 }
 
 .content-wrap {
@@ -71,10 +71,11 @@ h2 {
 #about {
     display: flex;
     justify-content: center;
-    background: url("/images/trongdong.jpg") center no-repeat;
+    background: url("/images/bgt.jpg") center no-repeat;
     background-size: 100% auto;
     background-color: #ed3237;
-    height: 13vh;
+    /* height: 13vh; */
+    height: 17vh;
 }
 
 #quochuy {

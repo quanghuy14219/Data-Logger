@@ -103,3 +103,11 @@ window.addEventListener("authentication complete", (event) => {
   const { user, token } = auth;
   socket.emit("authorization", token);
 });
+
+socket.on("seri-deleted", function (seri) {
+  window.dispatchEvent(
+    new CustomEvent("seri-deleted", {
+      detail: seri,
+    })
+  );
+});

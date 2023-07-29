@@ -2,7 +2,7 @@ let focusRow = {
   boxRef: null,
 };
 
-const loadDataToTable = (svg2mData, replace = true) => {
+const loadDataToTable = (svg2mData, replace = true, isNewSeri = false) => {
   const tableBody = document.getElementById("tbl_data");
   if (!tableBody) {
     console.log("No table body with id tal_data found");
@@ -87,6 +87,7 @@ const loadDataToTable = (svg2mData, replace = true) => {
     window.postMessage(
       {
         type: "TABLE_RELOAD_DATA",
+        isNewSeri,
       },
       window.location.origin
     );
@@ -114,7 +115,7 @@ const loadData = async (seri, limit = 200) => {
     .catch(function (error) {
       console.log(error);
     });
-  loadDataToTable(svg2mData);
+  loadDataToTable(svg2mData, true, true);
   // Update current data
   currentData = svg2mData;
 };

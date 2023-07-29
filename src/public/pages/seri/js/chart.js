@@ -39,6 +39,11 @@ class SVG2MChart {
   constructor(root) {
     this.root = root;
     this.root.container.set("layout", root.verticalLayout);
+    this.data = [];
+    this.needUpdate = false;
+    this.lastUpdate = null;
+    this.updateEvery = 10000; //ms
+    this.updateInterval = null;
     // chart
     this.chart = this.root.container.children.push(
       am5xy.XYChart.new(this.root, {
@@ -278,7 +283,21 @@ class SVG2MChart {
     this.chart.appear(1000, 0);
   }
 
-  setData(data, label = null) {
+  // Tell it that only update after a time
+  setUpdate(time) {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+    this.updateInterval = setInterval(() => {
+      if (this.needUpdate) {
+        this.update(this.data);
+        this.lastUpdate = Date.now();
+        this.needUpdate = false;
+      }
+    }, time);
+  }
+
+  update(data) {
     // DRA Dose Rate
     this.draDoseRateSeries.data.setAll(data);
     this.draDoseRateSeries.bullets.push(() => {
@@ -335,6 +354,21 @@ class SVG2MChart {
     this.sbActBetaSeries.data.setAll(data);
     // this.sbActGammaSeries.data.setAll(data);
   }
+
+  setData(data, force = false) {
+    if (force) {
+      this.update(data);
+      this.needUpdate = false;
+      this.data = data;
+      return;
+    }
+    if (this.data.length === 0) {
+      this.update(data);
+    } else {
+      this.needUpdate = true;
+    }
+    this.data = data;
+  }
 }
 
 am5.ready(() => {
@@ -344,6 +378,7 @@ am5.ready(() => {
   root.setThemes([am5themes_Animated.new(this.root)]);
 
   const chart = new SVG2MChart(root);
+  chart.setUpdate(10000);
 
   window.addEventListener("message", async (event) => {
     if (event.source !== window || event.origin !== window.location.origin) {
@@ -353,7 +388,7 @@ am5.ready(() => {
 
     // handle change marker event
     if (data.type && data.type === "LOAD_CHART_DATA") {
-      const data = currentData.map((svg2m) => {
+      const chartData = currentData.map((svg2m) => {
         return {
           date: convertStringToDate(svg2m.date, svg2m.time).getTime(),
           draDoseRate: svg2m.draDoseRate,
@@ -362,8 +397,11 @@ am5.ready(() => {
           actGamma: svg2m.actGamma,
         };
       });
-      data.sort((d1, d2) => d1.date - d2.date);
-      chart.setData(data, currentLabel);
+      chartData.sort((d1, d2) => d1.date - d2.date);
+      chart.setData(chartData, currentLabel);
+      if (chart.needUpdate && data.force) {
+        chart.update();
+      }
     }
   });
 });

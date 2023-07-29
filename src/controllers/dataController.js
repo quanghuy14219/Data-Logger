@@ -4,6 +4,7 @@ import {
   dispatchNewDataEvent,
   dispatchNewSeriEvent,
   dispatchChangeSeriInfoEvent,
+  dispatchRemoveSeriEvent,
 } from "../config/socket";
 import { adminCheck } from "./userController";
 
@@ -221,6 +222,42 @@ const getNewestRecords = async (req, res) => {
   return res.status(200).json(convertRecords);
 };
 
+const removeSeri = async (req, res) => {
+  const isNotAdmin = await adminCheck(req, res);
+  if (isNotAdmin) {
+    return isNotAdmin;
+  }
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({
+      err: "Missing id",
+    });
+  }
+  const seri = await dataService.findSeriById(id);
+  if (seri && seri === -1) {
+    return res.status(404).json({
+      err: `No seri with id ${id} found`,
+    });
+  }
+  if (!seri) {
+    return res.status(500).json({
+      err: "Internal server error",
+    });
+  }
+  const noOfUser = await dataService.deleteSeriFromUsers(seri.seriStr);
+  const noOfData = await dataService.deleteSeriWithData(seri.seriStr);
+  if (!noOfUser || !noOfData) {
+    return res.status(500).json({
+      err: "Internal server error",
+    });
+  }
+  dispatchRemoveSeriEvent(seri);
+  return res.status(200).json({
+    users: noOfUser,
+    data: noOfData,
+  });
+};
+
 module.exports = {
   addData,
   getDataByQuery,
@@ -229,4 +266,5 @@ module.exports = {
   changeSeriInfo,
   getAllSeries,
   getNewestRecords,
+  removeSeri,
 };

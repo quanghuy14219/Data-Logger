@@ -40,6 +40,7 @@ const initWebRouters = (app) => {
   // seri
   router.put("/api/series", dataController.changeSeriInfo);
   router.get("/api/series", dataController.getAllSeries);
+  router.delete("/api/series/:id", dataController.removeSeri);
 
   return app.use("/", router);
 };

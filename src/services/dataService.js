@@ -1,4 +1,4 @@
-import { SVG2M, Seri } from "../db/models";
+import { SVG2M, Seri, User } from "../db/models";
 
 const isExisted = async (seri, time) => {
   try {
@@ -203,6 +203,33 @@ const getNewestRecords = async (series) => {
   }
 };
 
+const deleteSeriFromUsers = async (seri) => {
+  if (!seri) return null;
+  try {
+    const numOfUserUpdated = await User.updateMany(
+      { series: { $in: [seri] } },
+      { $pull: { series: seri } }
+    );
+    return numOfUserUpdated;
+  } catch (error) {
+    return null;
+  }
+};
+
+const deleteSeriWithData = async (seri) => {
+  if (!seri) return null;
+  try {
+    const deletedSeries = await Seri.deleteMany({ seriStr: seri });
+    const deletedData = await SVG2M.deleteMany({ seriStr: seri });
+    return {
+      series: deletedSeries,
+      data: deletedData,
+    };
+  } catch (error) {
+    return null;
+  }
+};
+
 module.exports = {
   saveData,
   getAllData,
@@ -215,4 +242,6 @@ module.exports = {
   getAllSeries,
   queryUserSeries,
   getNewestRecords,
+  deleteSeriFromUsers,
+  deleteSeriWithData,
 };

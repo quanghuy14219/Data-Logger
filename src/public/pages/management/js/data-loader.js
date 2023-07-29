@@ -13,11 +13,15 @@ const loadDataToTable = (data, clear = true) => {
     Array.isArray(data) &&
     data.forEach((user) => {
       // Realtime update
-      window.addEventListener("change-series", (event) => {
+      window.addEventListener("seri-deleted", (event) => {
         const account = event?.detail?.account;
         if (account._id === user._id) {
           user.series = account.series;
         }
+      });
+      window.addEventListener("deleted-seri", (event) => {
+        const seriStr = event?.detail.seriStr;
+        user.series = user.series.filter((seri) => seri !== seriStr);
       });
       //   if (user.role === "ADMIN") {
       //     return;
@@ -232,6 +236,14 @@ window.addEventListener("delete-account", (event) => {
   const id = event?.detail?._id;
   if (id) {
     const row = document.getElementById(`user-${id}`);
+    row && row.remove();
+  }
+});
+
+window.addEventListener("seri-deleted", (event) => {
+  const id = event?.detail?._id;
+  if (id) {
+    const row = document.getElementById(`seri-${id}`);
     row && row.remove();
   }
 });

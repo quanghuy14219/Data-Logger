@@ -43,6 +43,14 @@ socket.on("force-logout", function () {
   window.dispatchEvent(new CustomEvent("logout"));
 });
 
+socket.on("seri-deleted", function (seri) {
+  window.dispatchEvent(
+    new CustomEvent("seri-deleted", {
+      detail: seri,
+    })
+  );
+});
+
 window.addEventListener("authentication complete", (event) => {
   const auth = event.detail;
   socket.auth = auth;

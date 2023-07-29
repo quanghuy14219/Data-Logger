@@ -35,26 +35,29 @@ function getContent(svg2mData, active = false) {
   } = svg2mData;
 
   let info = ` 
-    <div class="marker marker-info-${active ? "green" : "red"
+    <div class="marker marker-info-${
+      active ? "green" : "red"
     }" id="marker-info-${seri}">
       <h4 class="marker-header">ID: ${seri}</h4>
       <div class="marker-content">
         <ul>
           <li class="marker-time">Time: ${time} ${date}</li>
           <li class="marker-draDoseRate">DRA Dose Rate: ${draDoseRate} (µSv/h)</li>
-          ${mode === 1
-      ? ` 
+          ${
+            mode === 1
+              ? ` 
             <li class="marker-actAlpha">Act Alpha: ${actAlpha} (CPS)</li>
             <li class="marker-actBeta">Act Beta: ${actBeta} (CPS)</li>
             <li class="marker-actGamma">Act Gamma: ${actGamma} (µSv/h)</li>
             `
-      : ""
-    } 
+              : ""
+          } 
           
         </ul>
       </div>
-      <a class="marker-detail" href="${window.location.origin
-    }/seri-data?s=${seri}">Đến trang xem dữ liệu</a>
+      <a class="marker-detail" href="${
+        window.location.origin
+      }/seri-data?s=${seri}">Đến trang xem dữ liệu</a>
     </div>
   `;
 
@@ -153,8 +156,8 @@ async function updateMarker(svg2m) {
       }
 
       const timeLeft = Date.now() - newDate.getTime();
-      console.log("TimeLeft", timeLeft);
-      if (timeLeft < MAX_TIME_LEFT) {
+      // console.log("TimeLeft", timeLeft);
+      if (timeLeft >= 0 && timeLeft < MAX_TIME_LEFT) {
         infoWindow.setContent(getContent(svg2m, true));
         infoWindow.open(map, marker);
 
@@ -315,6 +318,23 @@ window.addEventListener("new-seri", async (event) => {
   }
 });
 
+window.addEventListener("seri-deleted", async (event) => {
+  const seriStr = event?.detail?.seriStr;
+  console.log(seriStr);
+  if (!seriStr) return;
+  const seriControl = document.getElementById(`marker-control-${seriStr}`);
+  seriControl && seriControl.remove();
+  const marker = _Map_.markers[seriStr];
+  if (marker) {
+    marker.setMap(null);
+    if (marker.timeOut) {
+      clearTimeout(marker.timeOut);
+    }
+    document.getElementById(`marker-control-${seriStr}`)?.remove();
+    delete _Map_.markers[seriStr];
+  }
+});
+
 window.addEventListener("change-series", async (event) => {
   const { user, token } = getUser();
   if (user?.role === "ADMIN") return;
@@ -361,6 +381,7 @@ window.addEventListener("change-series", async (event) => {
         clearTimeout(marker.timeOut);
       }
       document.getElementById(`marker-control-${seriStr}`)?.remove();
+      delete _Map_.markers[seriStr];
     }
   });
 

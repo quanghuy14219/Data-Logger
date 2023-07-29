@@ -165,4 +165,12 @@ export const dispatchChangeSeriesEvent = (account) => {
   });
 };
 
+export const dispatchRemoveSeriEvent = (data) => {
+  if (socketIORef.current) {
+    Object.values(socketIORef.clients).forEach((socket) => {
+      socket.emit("seri-deleted", data);
+    });
+  }
+};
+
 export default socketIORef;

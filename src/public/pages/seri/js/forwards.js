@@ -52,6 +52,7 @@ window.addEventListener("message", async (event) => {
     window.postMessage(
       {
         type: "LOAD_CHART_DATA",
+        force: data.isNewSeri,
       },
       window.location.origin
     );

@@ -262,3 +262,36 @@ async function changeInfo() {
     }
   }
 }
+
+async function deleteSeri() {
+  const id = document.getElementById("seri-pane-inf-id")?.textContent;
+  if (
+    id &&
+    window.confirm(
+      "Hành động này sẽ xóa tất cả dữ liệu liên quan. Bạn chắc chắn chứ?"
+    )
+  ) {
+    const auth = localStorage.getItem("auth");
+    if (!auth) {
+      logout();
+    }
+    try {
+      const { user, token } = JSON.parse(auth);
+      await axios
+        .delete(`/api/series/${id}`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          const showBtn = document.getElementById("btn-show-seri-pane");
+          showBtn && showBtn.click();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      logout();
+    }
+  }
+}
